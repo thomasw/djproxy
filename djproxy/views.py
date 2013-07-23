@@ -42,5 +42,3 @@ class HttpProxy(View):
             response[header] = value
 
         return response
-
-
