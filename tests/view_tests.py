@@ -2,15 +2,7 @@ from django.test.client import RequestFactory
 from mock import ANY, Mock, patch
 from unittest2 import TestCase
 
-from djproxy.views import HttpProxy
-
-
-class BadTestProxy(HttpProxy):
-    pass
-
-
-class GoodTestProxy(HttpProxy):
-    base_url = "https://google.com/"
+from test_views import BadTestProxy, GoodTestProxy
 
 
 class RequestPatchMixin(object):
@@ -75,4 +67,3 @@ class HttpProxyUrlConstructionWithURLKwarg(TestCase, RequestPatchMixin):
         self.request.assert_called_once_with(
             method=ANY, url="https://google.com/yay/", data=ANY, headers=ANY,
             cookies=ANY, files=ANY)
-
