@@ -12,5 +12,3 @@ INSTALLED_APPS = (
     'djproxy',
 )
 
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-NOSE_ARGS = ['--with-spec', '--spec-color']
