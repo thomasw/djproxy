@@ -6,7 +6,11 @@ DOWNSTREAM_INJECTION = lambda x: x
 
 
 class LocalProxy(HttpProxy):
-    base_url = "http://127.0.0.1:8081/some/content/"
+    base_url = "http://sitebuilder.qa.yola.net/en/ide/Yola/Yola.session.jsp"
+
+
+class SBProxy(HttpProxy):
+    base_url = "http://sitebuilder.qa.yola.net/en/APIController"
 
 
 def index(request):
