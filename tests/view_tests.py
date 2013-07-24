@@ -49,7 +49,7 @@ class HttpProxyUrlConstructionWithoutURLKwarg(TestCase, RequestPatchMixin):
         """only contains base_url"""
         self.request.assert_called_once_with(
             method=ANY, url="https://google.com/", data=ANY, headers=ANY,
-            cookies=ANY, files=ANY)
+            files=ANY, params=ANY)
 
 
 class HttpProxyUrlConstructionWithURLKwarg(TestCase, RequestPatchMixin):
@@ -66,4 +66,4 @@ class HttpProxyUrlConstructionWithURLKwarg(TestCase, RequestPatchMixin):
         """merges base_url and url kwarg when both are present"""
         self.request.assert_called_once_with(
             method=ANY, url="https://google.com/yay/", data=ANY, headers=ANY,
-            cookies=ANY, files=ANY)
+            files=ANY, params=ANY)
