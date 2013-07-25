@@ -1,21 +1,9 @@
 from django.test.client import RequestFactory
-from mock import ANY, Mock, patch
+from mock import ANY, Mock
 from unittest2 import TestCase
 
+from helpers import RequestPatchMixin
 from test_views import TestProxy
-
-
-class RequestPatchMixin(object):
-    def patch_request(self, mock_response=None):
-        """patches requests.request and sets its return_value"""
-        self.request_patcher = patch('djproxy.views.request')
-        self.request = self.request_patcher.start()
-
-        self.request.return_value = mock_response
-
-        self.mock_response = mock_response
-
-        return self.request
 
 
 class HttpProxyConfigVerification(TestCase, RequestPatchMixin):
