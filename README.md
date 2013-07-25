@@ -18,7 +18,7 @@ Start by defining a new proxy:
 ```python
 from djrpoxy.views import HttpProxy
 
-class MyProxy(HttpProxy):
+class LocalProxy(HttpProxy):
     base_url = 'https://google.com/'
 ```
 
