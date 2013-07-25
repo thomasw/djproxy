@@ -10,6 +10,8 @@ logger = logging.getLogger(__name__)
 
 
 class HttpProxy(View):
+    """Reverse HTTP Proxy class-based generic view."""
+
     base_url = None
     ignored_downstream_headers = [
         'Content-Length', 'Content-Encoding', 'Keep-Alive', 'Connection',
@@ -29,6 +31,7 @@ class HttpProxy(View):
 
     @property
     def headers(self):
+        """Request headers contained in self.request.META"""
         request_headers = {}
         other_headers = ['CONTENT_TYPE', 'CONTENT_LENGTH']
 
@@ -43,10 +46,12 @@ class HttpProxy(View):
 
     @property
     def downstream_ip(self):
+        """IP address of the resource to be proxied."""
         return socket.gethostbyname(urlparse(self.proxy_url).hostname)
 
     @property
     def query_string(self):
+        """Incoming request's query string"""
         if self.pass_query_string:
             return self.request.META['QUERY_STRING']
 
@@ -71,6 +76,7 @@ class HttpProxy(View):
         return self.proxy()
 
     def normalize_django_header_name(self, header):
+        """unmunge header names normalized by Django"""
         # Remove HTTP_ prefix.
         new_header = header.rpartition('HTTP_')[2]
         # Camel case and replace _ with -
@@ -80,6 +86,7 @@ class HttpProxy(View):
         return new_header
 
     def filter_headers(self, header_dict, ignore_list):
+        """Generate a header dict with a subset of the original headers"""
         filtered_headers = {}
         lowercased_ignore_list = map(lambda x: x.lower(), ignore_list)
 
