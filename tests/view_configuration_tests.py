@@ -73,3 +73,40 @@ class HttpProxyUrlConstructionWithURLKwarg(TestCase, RequestPatchMixin):
         self.request.assert_called_once_with(
             method=ANY, url="https://google.com/yay/", data=ANY, headers=ANY,
             files=ANY, params=ANY)
+
+
+class HttpProxyUrlConstructionWithQueryStringPassingEnabled(
+        TestCase, RequestPatchMixin):
+    """HttpProxy URL construction with query string passing enabled"""
+    def setUp(self):
+        self.fake_request = RequestFactory().get('/yay/?yay=foo,bar')
+        self.proxy = TestProxy.as_view()
+
+        self.patch_request(Mock(raw='', status_code=200, headers={}))
+
+        self.proxy(self.fake_request, url="yay/")
+
+    def test_sends_query_string_to_proxied_endpoint(self):
+        self.request.assert_called_once_with(
+            method=ANY, url=ANY, data=ANY, headers=ANY, files=ANY,
+            params='yay=foo,bar')
+
+
+class HttpProxyUrlConstructionWithoutQueryStringPassingEnabled(
+        TestCase, RequestPatchMixin):
+    """HttpProxy URL construction without query string passing enabled"""
+    def setUp(self):
+        TestProxy.pass_query_string = False
+        self.fake_request = RequestFactory().get('/yay/?yay=foo,bar')
+        self.proxy = TestProxy.as_view()
+
+        self.patch_request(Mock(raw='', status_code=200, headers={}))
+
+        self.proxy(self.fake_request, url="yay/")
+
+    def tearDown(self):
+        TestProxy.pass_query_string = True
+
+    def test_doesnt_sends_query_string_to_proxied_endpoint(self):
+        self.request.assert_called_once_with(
+            method=ANY, url=ANY, data=ANY, headers=ANY, files=ANY, params='')
