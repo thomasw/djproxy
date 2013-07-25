@@ -11,12 +11,20 @@ functionality.
 djproxy is not intended to be used in production, but should suffice for
 development. Use your web server's proxy capabilities in the wild.
 
+## Installation
+
+```
+pip install djproxy
+```
+
+djproxy requires requests >= 1.0.0, <= 2.0.0 and django >= 1.4.0.
+
 ## Usage
 
 Start by defining a new proxy:
 
 ```python
-from djrpoxy.views import HttpProxy
+from djproxy.views import HttpProxy
 
 class LocalProxy(HttpProxy):
     base_url = 'https://google.com/'
