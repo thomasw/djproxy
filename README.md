@@ -1,4 +1,4 @@
-# djproxy
+# djproxy [![Build Status](https://travis-ci.org/thomasw/djproxy.png?branch=master)](https://travis-ci.org/thomasw/djproxy)
 
 djproxy is a class-based generic view reverse HTTP proxy for Django.
 
