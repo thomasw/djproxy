@@ -11,9 +11,5 @@ def index(request):
     return HttpResponse('Some content!', status=200)
 
 
-class BadTestProxy(HttpProxy):
-    pass
-
-
-class GoodTestProxy(HttpProxy):
+class TestProxy(HttpProxy):
     base_url = "https://google.com/"
