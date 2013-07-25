@@ -22,8 +22,8 @@ class MyProxy(HttpProxy):
     base_url = 'https://google.com/'
 ```
 
-Add a url pattern that points at your proxy. The `url` kwarg will be urljoined
-with base_url:
+Add a url pattern that points at your proxy view. The `url` kwarg will be
+urljoined with base_url:
 
 ```python
 urlpatterns = patterns(
@@ -32,7 +32,10 @@ urlpatterns = patterns(
 )
 ```
 
-HttpProxy configuration:
+`/local_proxy/some/content` will now proxy `https://google.com/some/content/`.
+
+
+### HttpProxy configuration:
 
 * `base_url`: The proxy url is formed by
    `urlparse.urljoin(base_url, url_kwarg)`
