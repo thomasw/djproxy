@@ -2,6 +2,14 @@ from setuptools import setup, find_packages
 
 from djproxy import __version__, __author__
 
+# Multiprocessing is needed to execute `python setup.py tests` without any
+# errors in some installations.
+try:
+    import multiprocessing
+    multiprocessing  # resolve unused import pep8 violation by 'using' it
+except:
+    pass
+
 setup(
     name="djproxy",
     version=__version__,
