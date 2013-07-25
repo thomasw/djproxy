@@ -59,6 +59,10 @@ the 1.5 installation from `requirements.txt` by installing the desired version.
 
 Run `nosetests` to execute the test suite.
 
+To automatically run the test suite, pyflakes, and pep8 checks whenever python
+files change use testtube by executing `stir` in the top level djproxy
+directory.
+
 To run a Django dev server that proxies itself, execute the following:
 
 ```
