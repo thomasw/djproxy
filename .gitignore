@@ -1,1 +1,5 @@
+# Build / test artifacts
 *.db
+*.egg-info/
+build/
+dist/
