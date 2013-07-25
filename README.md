@@ -69,5 +69,11 @@ To run a Django dev server that proxies itself, execute the following:
 django-admin.py runserver --settings=tests.test_settings --pythonpath="./"
 ```
 
+Similarly, to run a configure Django shell, execute the following:
+
+```
+django-admin.py shell --settings=tests.test_settings --pythonpath="./"
+```
+
 See `tests/test_settings.py` and `tests/test_urls.py` for configuration
 information.
