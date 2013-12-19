@@ -17,6 +17,7 @@ class HttpProxyHeaderPassThrough(TestCase, RequestPatchMixin):
         self.browser_request.META['HTTP_Host'] = 'cnn.com'
         self.browser_request.META['HTTP_X_Forwarded_For'] = 'ipaddr 1'
         self.browser_request.META['HTTP_UNNORMALIZED_HEADER'] = 'header value'
+        self.browser_request.META['CONTENT_TYPE'] = 'header value'
 
         self.patch_request(Mock(headers={'Fake-Header': '123'}))
 
