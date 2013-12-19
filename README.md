@@ -17,7 +17,7 @@ development. Use your web server's proxy capabilities in the wild.
 pip install djproxy
 ```
 
-djproxy requires requests >= 1.0.0, <= 2.0.0 and django >= 1.4.0.
+djproxy requires requests >= 1.0.0 and django >= 1.4.0.
 
 ## Usage
 

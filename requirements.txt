@@ -8,5 +8,5 @@ testtube==0.0.1
 unittest2==0.5.1
 
 # Functional requirements
-requests>=1.2.3
+requests>=1.0.0
 django>=1.4
