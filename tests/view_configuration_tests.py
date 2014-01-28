@@ -60,7 +60,7 @@ class HttpProxyUrlConstructionWithoutURLKwarg(TestCase, RequestPatchMixin):
         """only contains base_url"""
         self.request.assert_called_once_with(
             method=ANY, url="https://google.com/", data=ANY, headers=ANY,
-            files=ANY, params=ANY)
+            params=ANY)
 
 
 class HttpProxyUrlConstructionWithURLKwarg(TestCase, RequestPatchMixin):
@@ -80,7 +80,7 @@ class HttpProxyUrlConstructionWithURLKwarg(TestCase, RequestPatchMixin):
         """urljoins base_url and url kwarg"""
         self.request.assert_called_once_with(
             method=ANY, url="https://google.com/yay/", data=ANY, headers=ANY,
-            files=ANY, params=ANY)
+            params=ANY)
 
 
 class HttpProxyUrlConstructionWithQueryStringPassingEnabled(
@@ -99,8 +99,7 @@ class HttpProxyUrlConstructionWithQueryStringPassingEnabled(
 
     def test_sends_query_string_to_proxied_endpoint(self):
         self.request.assert_called_once_with(
-            method=ANY, url=ANY, data=ANY, headers=ANY, files=ANY,
-            params='yay=foo,bar')
+            method=ANY, url=ANY, data=ANY, headers=ANY, params='yay=foo,bar')
 
 
 class HttpProxyUrlConstructionWithoutQueryStringPassingEnabled(
@@ -121,4 +120,4 @@ class HttpProxyUrlConstructionWithoutQueryStringPassingEnabled(
 
     def test_doesnt_sends_query_string_to_proxied_endpoint(self):
         self.request.assert_called_once_with(
-            method=ANY, url=ANY, data=ANY, headers=ANY, files=ANY, params='')
+            method=ANY, url=ANY, data=ANY, headers=ANY, params='')
