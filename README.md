@@ -78,7 +78,7 @@ configuration = {
 
 urlpatterns += patterns(
     '',
-    generate_routes(settings.PROXY_BACKENDS)
+    generate_routes(configuration)
 )
 ```
 
