@@ -54,6 +54,34 @@ urlpatterns = patterns(
 * `pass_query_string`: A boolean indicating whether the query string should be
   sent to the proxied endpoint.
 
+### HttpProxy dynamic configuration and route generation helper:
+
+If you'd like to specify the configuration for a set of proxies, without
+having to maintain specific classes and url routes, you can use
+`djproxy.helpers.generate_routes` as follows:
+
+In `urls.py`, pass `generate_routes` a `configuration` dict to configure a set of proxies:
+
+```python
+from djproxy.helpers import generate_routes
+
+configuration = {
+    'test_proxy': {
+        'base_url': 'https://google.com/',
+        'prefix': 'test_prefix/',
+    },
+    'service_name': {
+        'base_url': 'http://service.com/',
+        'prefix': 'service_prefix/'
+    }
+}
+
+urlpatterns += patterns(
+    '',
+    generate_routes(settings.PROXY_BACKENDS)
+)
+```
+
 ## Contributing
 
 To run the tests, first install the dependencies:
