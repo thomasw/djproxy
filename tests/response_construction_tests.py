@@ -6,7 +6,8 @@ from helpers import RequestPatchMixin, ResponsePatchMixin
 from test_views import TestProxy
 
 
-class ResponseConstructionTest(TestCase, RequestPatchMixin, ResponsePatchMixin):
+class ResponseConstructionTest(TestCase, RequestPatchMixin,
+                               ResponsePatchMixin):
     def setUp(self):
         self.proxy = TestProxy.as_view()
         self.browser_request = RequestFactory().get('/')
