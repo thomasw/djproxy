@@ -63,7 +63,7 @@ having to maintain specific classes and url routes, you can use
 In `urls.py`, pass `generate_routes` a `configuration` dict to configure a set of proxies:
 
 ```python
-from djproxy.helpers import generate_routes
+from djproxy.urls import generate_routes
 
 configuration = {
     'test_proxy': {

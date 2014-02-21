@@ -3,7 +3,7 @@ from mock import ANY, Mock
 from unittest2 import TestCase
 
 from helpers import RequestPatchMixin
-from djproxy.helpers import generate_routes
+from djproxy.urls import generate_routes
 
 
 class GenerateRoutesGeneratesExpectedPatterns(TestCase, RequestPatchMixin):
