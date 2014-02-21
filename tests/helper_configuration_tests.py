@@ -6,7 +6,7 @@ from helpers import RequestPatchMixin
 from djproxy.urls import generate_routes
 
 
-class GenerateRoutesGeneratesExpectedPatterns(TestCase, RequestPatchMixin):
+class GenerateRoutesTest(TestCase, RequestPatchMixin):
     """generate_routes returns the expected url patterns"""
     def setUp(self):
         self.configuration = {
@@ -27,15 +27,18 @@ class GenerateRoutesGeneratesExpectedPatterns(TestCase, RequestPatchMixin):
     def tearDown(self):
         self.stop_patching_request()
 
-    def test_generate_routes_returns_expected_view_when_configured(self):
+    def test_generate_routes_configures_proxy(self):
         """proxy is configured from configuration"""
         self.request.assert_called_once_with(
             method=ANY, url="https://google.com/", data=ANY, headers=ANY,
             params=ANY)
+
+    def test_prefix_gets_regexed(self):
+        """url prefix is a regex"""
         self.assertEquals(self.prefix, '^foo/')
 
 
-class GenerateRoutesGeneratesMultipleProxies(TestCase, RequestPatchMixin):
+class GenerateRoutesMultipleProxiesTest(TestCase, RequestPatchMixin):
     """generate_routes returns multiple service proxies"""
     def setUp(self):
         self.configuration = {
