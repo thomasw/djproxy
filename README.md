@@ -76,10 +76,29 @@ configuration = {
     }
 }
 
-urlpatterns += patterns(
-    '',
-    generate_routes(configuration)
-)
+urlpatterns += generate_routes(configuration)
+```
+
+Using the snippet above will enable your Django app to proxy
+`https://google.com/X` at `/test_prefix/X` and
+`http://service.com/Y` at `/service_prefix/Y`.
+
+These correspond to the following production Apache proxy configuration:
+```
+<Proxy https://google.com/*>
+    Order deny,allow
+    Allow from all
+</Proxy>
+ProxyPass /test_prefix/ https://google.com/
+ProxyPassReverse /test_prefix/ https://google.com/
+
+
+<Proxy http://service.com/*>
+    Order deny,allow
+    Allow from all
+</Proxy>
+ProxyPass /service_prefix/ http://service.com/
+ProxyPassReverse /service_prefix/ http://service.com/
 ```
 
 ## Contributing
