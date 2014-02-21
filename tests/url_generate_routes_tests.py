@@ -1,13 +1,9 @@
-import logging
-
 from django.test.client import RequestFactory
-from django.conf import settings
-from django.core.urlresolvers import get_resolver, set_urlconf
+from django.core.urlresolvers import get_resolver
 from mock import ANY, Mock
 from unittest2 import TestCase
 
 from helpers import RequestPatchMixin
-from djproxy.urls import generate_routes
 
 
 class GenerateRoutesTest(TestCase, RequestPatchMixin):
