@@ -11,10 +11,10 @@ urlpatterns = patterns(
 ) + generate_routes({
     'service_one': {
         'base_url': 'https://yahoo.com/',
-        'prefix': 'yahoo/'
+        'prefix': '/yahoo/'
     },
     'service_two': {
-        'base_url': 'https://www.google.com/',
-        'prefix': 'google/'
+        'base_url': 'http://www.google.com/',
+        'prefix': '/google/'
     }
 })

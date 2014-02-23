@@ -16,7 +16,7 @@ def generate_routes(config):
     generate_routes({
         'test_proxy': {
             'base_url': 'https://google.com/',
-            'prefix': 'test_prefix/'
+            'prefix': '/test_prefix/'
         }
     })
 
