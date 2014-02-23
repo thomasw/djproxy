@@ -2,6 +2,8 @@
 
 [![Build Status](https://travis-ci.org/thomasw/djproxy.png)](https://travis-ci.org/thomasw/djproxy)
 [![Coverage Status](https://coveralls.io/repos/thomasw/djproxy/badge.png)](https://coveralls.io/r/thomasw/djproxy)
+[![Latest Version](https://pypip.in/v/djproxy/badge.png)](https://pypi.python.org/pypi/djproxy/)
+[![Downloads](https://pypip.in/d/djproxy/badge.png)](https://pypi.python.org/pypi/djproxy/)
 
 djproxy is a class-based generic view reverse HTTP proxy for Django.
 
