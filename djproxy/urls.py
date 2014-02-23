@@ -5,9 +5,12 @@ from django.conf.urls import patterns, url
 from djproxy.views import HttpProxy
 
 
-def generate_proxy(base_url=''):
+def generate_proxy(prefix, base_url=''):
     """Generates a ProxyClass based view that uses the passed base_url"""
-    return type('ProxyClass', (HttpProxy,), {'base_url': base_url})
+    return type('ProxyClass', (HttpProxy,), {
+        'base_url': base_url,
+        'reverse_urls': [(prefix, base_url)]
+    })
 
 
 def generate_routes(config):
@@ -31,7 +34,7 @@ def generate_routes(config):
 
     for name, config in config.iteritems():
         pattern = r'^%s(?P<url>.*)$' % re.escape(config['prefix'].lstrip('/'))
-        proxy = generate_proxy(config['base_url'])
+        proxy = generate_proxy(config['prefix'], config['base_url'])
 
         routes.append(url(pattern, proxy.as_view(), name=name))
 
