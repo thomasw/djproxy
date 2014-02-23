@@ -68,11 +68,11 @@ from djproxy.urls import generate_routes
 configuration = {
     'test_proxy': {
         'base_url': 'https://google.com/',
-        'prefix': 'test_prefix/',
+        'prefix': '/test_prefix/',
     },
     'service_name': {
         'base_url': 'http://service.com/',
-        'prefix': 'service_prefix/'
+        'prefix': '/service_prefix/'
     }
 }
 
