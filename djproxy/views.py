@@ -103,7 +103,8 @@ class HttpProxy(View):
             self.headers, self.ignored_request_headers)
         result = request(
             method=self.request.method, url=self.proxy_url, headers=headers,
-            data=self.request.body, params=self.query_string)
+            data=self.request.body, params=self.query_string,
+            allow_redirects=False)
 
         response = HttpResponse(result.content, status=result.status_code)
         forwardable_headers = self.filter_headers(
