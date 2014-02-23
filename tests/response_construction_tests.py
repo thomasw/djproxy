@@ -6,7 +6,8 @@ from helpers import RequestPatchMixin, ResponsePatchMixin
 from test_views import TestProxy
 
 
-class ResponeConstructionTest(TestCase, RequestPatchMixin, ResponsePatchMixin):
+class ResponseConstructionTest(TestCase, RequestPatchMixin,
+                               ResponsePatchMixin):
     def setUp(self):
         self.proxy = TestProxy.as_view()
         self.browser_request = RequestFactory().get('/')
@@ -26,13 +27,13 @@ class ResponeConstructionTest(TestCase, RequestPatchMixin, ResponsePatchMixin):
         self.stop_patching_response()
 
 
-class HttpProxyContentPassThrough(ResponeConstructionTest):
+class HttpProxyContentPassThrough(ResponseConstructionTest):
     def test_creates_response_object_with_proxied_content_and_status(self):
         self.response_mock.assert_called_once_with(
             'downstream content', status=200)
 
 
-class HttpProxyHeaderPassThrough(ResponeConstructionTest):
+class HttpProxyHeaderPassThrough(ResponseConstructionTest):
     def test_sets_downstream_headers_on_response_object(self):
         self.response_stub.__setitem__.assert_any_call('Fake-Header', '123')
 

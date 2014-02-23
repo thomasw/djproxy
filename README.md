@@ -54,6 +54,53 @@ urlpatterns = patterns(
 * `pass_query_string`: A boolean indicating whether the query string should be
   sent to the proxied endpoint.
 
+### HttpProxy dynamic configuration and route generation helper:
+
+If you'd like to specify the configuration for a set of proxies, without
+having to maintain specific classes and url routes, you can use
+`djproxy.helpers.generate_routes` as follows:
+
+In `urls.py`, pass `generate_routes` a `configuration` dict to configure a set of proxies:
+
+```python
+from djproxy.urls import generate_routes
+
+configuration = {
+    'test_proxy': {
+        'base_url': 'https://google.com/',
+        'prefix': 'test_prefix/',
+    },
+    'service_name': {
+        'base_url': 'http://service.com/',
+        'prefix': 'service_prefix/'
+    }
+}
+
+urlpatterns += generate_routes(configuration)
+```
+
+Using the snippet above will enable your Django app to proxy
+`https://google.com/X` at `/test_prefix/X` and
+`http://service.com/Y` at `/service_prefix/Y`.
+
+These correspond to the following production Apache proxy configuration:
+```
+<Proxy https://google.com/*>
+    Order deny,allow
+    Allow from all
+</Proxy>
+ProxyPass /test_prefix/ https://google.com/
+ProxyPassReverse /test_prefix/ https://google.com/
+
+
+<Proxy http://service.com/*>
+    Order deny,allow
+    Allow from all
+</Proxy>
+ProxyPass /service_prefix/ http://service.com/
+ProxyPassReverse /service_prefix/ http://service.com/
+```
+
 ## Contributing
 
 To run the tests, first install the dependencies:

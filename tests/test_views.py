@@ -4,7 +4,7 @@ from djproxy.views import HttpProxy
 
 
 class LocalProxy(HttpProxy):
-    base_url = "http://localhost:8000/some/content/"
+    base_url = 'http://localhost:8000/some/content/'
 
 
 def index(request):
@@ -12,4 +12,4 @@ def index(request):
 
 
 class TestProxy(HttpProxy):
-    base_url = "https://google.com/"
+    base_url = 'https://google.com/'

@@ -58,7 +58,7 @@ class HttpProxy(View):
         return ''
 
     def _verify_config(self):
-        assert self.base_url, "base_url must be set to generate a proxy url"
+        assert self.base_url, 'base_url must be set to generate a proxy url'
 
         # ignored_downstream_headers and ignored_request_headers must be
         # iterable
