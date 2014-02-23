@@ -3,14 +3,35 @@ from django.conf.urls import patterns, url
 from djproxy.views import HttpProxy
 
 
+def generate_proxy(base_url=''):
+    """Generates a ProxyClass based view that uses the passed base_url"""
+    return type('ProxyClass', (HttpProxy,), {'base_url': base_url})
+
+
 def generate_routes(config):
-    routes = ()
-    for service_name, proxy_config in config.items():
-        base_url = proxy_config['base_url']
-        prefix = proxy_config['prefix']
+    """Generates a set of patterns and proxy views based on the passed config.
 
-        ProxyClass = type('ProxyClass', (HttpProxy,), {'base_url': base_url})
+    generate_routes({
+        'test_proxy': {
+            'base_url': 'https://google.com/',
+            'prefix': 'test_prefix/'
+        }
+    })
 
-        routes += url(r'^%s' % prefix.lstrip('/'), ProxyClass.as_view()),
+    Returns
+
+    patterns(
+        '',
+        url(r'^test_prefix/', GeneratedProxy.as_view(), name="test_proxy"))
+
+    """
+    routes = []
+
+    for name, config in config.iteritems():
+        prefix = config['prefix'].lstrip('/')
+        proxy = generate_proxy(config['base_url'])
+
+        routes.append(url(
+            r'^%s(?P<url>.*)$' % prefix, proxy.as_view(), name=name))
 
     return patterns('', *routes)
