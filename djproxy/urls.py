@@ -22,7 +22,7 @@ def generate_routes(config):
 
     patterns(
         '',
-        url(r'^test_prefix/', GeneratedProxy.as_view(), name="test_proxy"))
+        url(r'^test_prefix/', GeneratedProxy.as_view(), name='test_proxy'))
 
     """
     routes = []

@@ -59,7 +59,7 @@ class HttpProxyUrlConstructionWithoutURLKwarg(TestCase, RequestPatchMixin):
     def test_only_contains_base_url_if_no_default_url_configured(self):
         """only contains base_url"""
         self.request.assert_called_once_with(
-            method=ANY, url="https://google.com/", data=ANY, headers=ANY,
+            method=ANY, url='https://google.com/', data=ANY, headers=ANY,
             params=ANY)
 
 
@@ -71,7 +71,7 @@ class HttpProxyUrlConstructionWithURLKwarg(TestCase, RequestPatchMixin):
 
         self.patch_request(Mock(raw='', status_code=200, headers={}))
 
-        self.proxy(self.fake_request, url="yay/")
+        self.proxy(self.fake_request, url='yay/')
 
     def tearDown(self):
         self.stop_patching_request()
@@ -79,7 +79,7 @@ class HttpProxyUrlConstructionWithURLKwarg(TestCase, RequestPatchMixin):
     def test_urljoins_base_url_and_url_kwarg(self):
         """urljoins base_url and url kwarg"""
         self.request.assert_called_once_with(
-            method=ANY, url="https://google.com/yay/", data=ANY, headers=ANY,
+            method=ANY, url='https://google.com/yay/', data=ANY, headers=ANY,
             params=ANY)
 
 
@@ -92,7 +92,7 @@ class HttpProxyUrlConstructionWithQueryStringPassingEnabled(
 
         self.patch_request(Mock(raw='', status_code=200, headers={}))
 
-        self.proxy(self.fake_request, url="yay/")
+        self.proxy(self.fake_request, url='yay/')
 
     def tearDown(self):
         self.stop_patching_request()
@@ -112,7 +112,7 @@ class HttpProxyUrlConstructionWithoutQueryStringPassingEnabled(
 
         self.patch_request(Mock(raw='', status_code=200, headers={}))
 
-        self.proxy(self.fake_request, url="yay/")
+        self.proxy(self.fake_request, url='yay/')
 
     def tearDown(self):
         self.stop_patching_request()
