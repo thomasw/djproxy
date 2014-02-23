@@ -14,7 +14,7 @@ urlpatterns = patterns(
         'prefix': 'yahoo/'
     },
     'service_two': {
-        'base_url': 'https://google.com/',
+        'base_url': 'https://www.google.com/',
         'prefix': 'google/'
     }
 })
