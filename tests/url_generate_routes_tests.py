@@ -1,26 +1,58 @@
-from django.test.client import RequestFactory
 from django.core.urlresolvers import get_resolver
-from mock import ANY, Mock
+from mock import patch
 from unittest2 import TestCase
 
-from helpers import RequestPatchMixin
+from djproxy.urls import generate_routes, generate_proxy
+from djproxy.views import HttpProxy
 
 
-class GenerateRoutesTest(TestCase, RequestPatchMixin):
-    """generate_routes returns multiple service proxies"""
+class GenerateRoutes(TestCase):
+    """generate_routes returns routes that"""
     def setUp(self):
-        resolver = get_resolver(None)
-        self.proxy, _, _ = resolver.resolve('/yahoo/')
+        self.resolver = get_resolver(None)
 
-        self.fake_request = RequestFactory().get('/yahoo/')
-        self.patch_request(Mock(raw='', status_code=200, headers={}))
-        self.proxy(self.fake_request)
+    def test_enable_proxy_prefixes_to_resolve(self):
+        self.resolver.resolve('/yahoo/')
 
-    def tearDown(self):
-        self.stop_patching_request()
+    def test_behave_correctly_when_passed_multiple_proxy_dicts(self):
+        self.resolver.resolve('/google/')
 
-    def test_proxies_are_configured(self):
-        """generate_routes configures proxies"""
-        self.request.assert_called_once_with(
-            method=ANY, url='https://yahoo.com/', data=ANY, headers=ANY,
-            params=ANY)
+    def test_enable_suffixes_of_proxy_prefixes_resolve(self):
+        self.resolver.resolve('/google/kittens')
+
+    def test_pass_proxy_url_suffixes_to_the_view_as_url_kwarg(
+            self):
+        self.assertEqual(
+            self.resolver.resolve('/google/kittens/').kwargs,
+            {'url': 'kittens/'})
+
+
+class GenerateRoutesProxyViewGeneration(TestCase):
+    """generate_routes build proxy views that"""
+    def setUp(self):
+        generate_proxy_patcher = patch('djproxy.urls.generate_proxy')
+
+        self.generate_proxy_mock = generate_proxy_patcher.start()
+
+        self.addCleanup(generate_proxy_patcher.stop)
+
+        generate_routes({
+            'yahoo_proxy': {
+                'base_url': 'https://yahoo.com/',
+                'prefix': 'yahoo/'
+            },
+        })
+
+    def test_have_a_base_url_based_on_the_passed_config(self):
+        self.generate_proxy_mock.assert_called_once_with('https://yahoo.com/')
+
+
+class GenerateProxy(TestCase):
+    def setUp(self):
+        self.proxy = generate_proxy('http://google.com/')
+
+    def test_yields_an_HttpProxy_CBGV(self):
+        self.assertTrue(issubclass(self.proxy, HttpProxy))
+
+    def test_sets_the_base_url_to_the_passed_value(self):
+        self.assertEqual(self.proxy.base_url, 'http://google.com/')
