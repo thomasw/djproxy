@@ -53,6 +53,45 @@ urlpatterns = patterns(
   to the proxied endpoint from the browser.
 * `pass_query_string`: A boolean indicating whether the query string should be
   sent to the proxied endpoint.
+* `reverse_urls`: An iterable of location header replacements to be made on
+  the constructed response (similar to Apache's `ProxyPassReverse` directive).
+
+## Adjusting location headers (ProxyPassReverse)
+
+Apache has a directive called `ProxyPassReverse` that makes replacements to
+three location headers: `URI`, `Location`, and `Content-Location`. Without this
+functionality, proxying an endpoint that returns a redirect with a `Location`
+header of `http://foo.bar/go/cats/` would cause a downstream requestor to be
+redirected away from the proxy. djproxy has a similar mechanism which is
+exposed via the `reverse_urls` class variable. The following proxies are
+equivalent:
+
+Djproxy:
+
+```python
+
+class ReverseProxy(HttpProxy):
+    base_url = 'https://google.com/'
+    reverse_urls = [
+        ('/google/', 'https://google.com/')
+    ]
+
+urlpatterns = patterns(
+    '',
+    url(r'^google/(?P<url>.*)$', ReverseProxy.as_view(), name='gproxy')
+
+```
+
+Apache:
+
+```
+<Proxy https://google.com/*>
+    Order deny,allow
+    Allow from all
+</Proxy>
+ProxyPass /google/ https://google.com/
+ProxyPassReverse /google/ https://google.com/
+```
 
 ### HttpProxy dynamic configuration and route generation helper:
 
@@ -60,7 +99,8 @@ If you'd like to specify the configuration for a set of proxies, without
 having to maintain specific classes and url routes, you can use
 `djproxy.helpers.generate_routes` as follows:
 
-In `urls.py`, pass `generate_routes` a `configuration` dict to configure a set of proxies:
+In `urls.py`, pass `generate_routes` a `configuration` dict to configure a set
+of proxies:
 
 ```python
 from djproxy.urls import generate_routes
