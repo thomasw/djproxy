@@ -9,4 +9,7 @@ env:
 install:
     - pip install -r requirements.txt --use-mirrors
     - pip install Django==$DJANGO_VERSION
-script: nosetests
+script:
+    - nosetests --with-coverage --cover-package=djproxy
+after_success:
+  - coveralls

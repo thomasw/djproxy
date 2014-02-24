@@ -1,6 +1,7 @@
 import logging
-from urlparse import urljoin, urlparse
+import re
 import socket
+from urlparse import urljoin, urlparse
 
 from django.http import HttpResponse
 from django.views.generic import View
@@ -20,6 +21,7 @@ class HttpProxy(View):
         'Content-Length', 'Content-Encoding', 'Keep-Alive', 'Connection',
         'Transfer-Encoding', 'Host', 'Expect', 'Upgrade']
     pass_query_string = True
+    reverse_urls = []
 
     def __init__(self, *args, **kwargs):
         return super(View, self).__init__(*args, **kwargs)
@@ -60,6 +62,9 @@ class HttpProxy(View):
     def _verify_config(self):
         assert self.base_url, 'base_url must be set to generate a proxy url'
 
+        for rule in self.reverse_urls:
+            assert len(rule) == 2, 'reverse_urls must be 2 string iterables'
+
         # ignored_downstream_headers and ignored_request_headers must be
         # iterable
         iter(self.ignored_downstream_headers)
@@ -96,6 +101,31 @@ class HttpProxy(View):
 
         return filtered_headers
 
+    def adjust_location_headers(self, request, response):
+        """Applies reverse url rules to location headers like ProxyPassReverse.
+
+        If self.reverse_urls = [
+            ('/yay/', 'http://backend.example.com/')
+        ]
+
+        Then, this method will search the given response object's Location,
+        Content-Location, and URI headers for '^http://backend.example.com/'
+        and replace matches with current hostname + /yay/. This is similar to
+        Apache's ProxyPassReverse directive.
+
+        """
+        location_headers = ['URI', 'Location', 'Content-Location']
+
+        for replacement, pattern in self.reverse_urls:
+            pattern = r'^%s' % re.escape(pattern)
+            replacement = request.build_absolute_uri(replacement)
+
+            for loc in location_headers:
+                if not response.has_header(loc):
+                    continue
+
+                response[loc] = re.sub(pattern, replacement, response[loc])
+
     def proxy(self):
         """Return an HttpResponse built based on retrieving self.proxy_url"""
         xff = self.downstream_ip
@@ -103,7 +133,8 @@ class HttpProxy(View):
             self.headers, self.ignored_request_headers)
         result = request(
             method=self.request.method, url=self.proxy_url, headers=headers,
-            data=self.request.body, params=self.query_string)
+            data=self.request.body, params=self.query_string,
+            allow_redirects=False)
 
         response = HttpResponse(result.content, status=result.status_code)
         forwardable_headers = self.filter_headers(
@@ -118,5 +149,7 @@ class HttpProxy(View):
             xff = '%s, %s' % (response['x-forwarded-for'], xff)
 
         response['x-forwarded-for'] = xff
+
+        self.adjust_location_headers(self.request, response)
 
         return response

@@ -13,3 +13,10 @@ def index(request):
 
 class TestProxy(HttpProxy):
     base_url = 'https://google.com/'
+
+
+class ReverseProxy(HttpProxy):
+    base_url = 'https://google.com/'
+    reverse_urls = [
+        ('/google/', 'https://google.com/')
+    ]

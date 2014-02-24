@@ -39,17 +39,18 @@ class GenerateRoutesProxyViewGeneration(TestCase):
         generate_routes({
             'yahoo_proxy': {
                 'base_url': 'https://yahoo.com/',
-                'prefix': 'yahoo/'
+                'prefix': '/yahoo/'
             },
         })
 
     def test_have_a_base_url_based_on_the_passed_config(self):
-        self.generate_proxy_mock.assert_called_once_with('https://yahoo.com/')
+        self.generate_proxy_mock.assert_called_once_with(
+            '/yahoo/', 'https://yahoo.com/')
 
 
 class GenerateProxy(TestCase):
     def setUp(self):
-        self.proxy = generate_proxy('http://google.com/')
+        self.proxy = generate_proxy('/google/', 'http://google.com/')
 
     def test_yields_an_HttpProxy_CBGV(self):
         self.assertTrue(issubclass(self.proxy, HttpProxy))

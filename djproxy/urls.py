@@ -1,11 +1,16 @@
+import re
+
 from django.conf.urls import patterns, url
 
 from djproxy.views import HttpProxy
 
 
-def generate_proxy(base_url=''):
+def generate_proxy(prefix, base_url=''):
     """Generates a ProxyClass based view that uses the passed base_url"""
-    return type('ProxyClass', (HttpProxy,), {'base_url': base_url})
+    return type('ProxyClass', (HttpProxy,), {
+        'base_url': base_url,
+        'reverse_urls': [(prefix, base_url)]
+    })
 
 
 def generate_routes(config):
@@ -14,7 +19,7 @@ def generate_routes(config):
     generate_routes({
         'test_proxy': {
             'base_url': 'https://google.com/',
-            'prefix': 'test_prefix/'
+            'prefix': '/test_prefix/'
         }
     })
 
@@ -28,10 +33,9 @@ def generate_routes(config):
     routes = []
 
     for name, config in config.iteritems():
-        prefix = config['prefix'].lstrip('/')
-        proxy = generate_proxy(config['base_url'])
+        pattern = r'^%s(?P<url>.*)$' % re.escape(config['prefix'].lstrip('/'))
+        proxy = generate_proxy(config['prefix'], config['base_url'])
 
-        routes.append(url(
-            r'^%s(?P<url>.*)$' % prefix, proxy.as_view(), name=name))
+        routes.append(url(pattern, proxy.as_view(), name=name))
 
     return patterns('', *routes)
