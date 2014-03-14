@@ -1,7 +1,7 @@
 # djproxy
 
 [![Build Status](https://travis-ci.org/thomasw/djproxy.png)](https://travis-ci.org/thomasw/djproxy)
-[![Coverage Status](https://coveralls.io/repos/thomasw/djproxy/badge.png)](https://coveralls.io/r/thomasw/djproxy)
+[![Coverage Status](https://coveralls.io/repos/thomasw/djproxy/badge.png?branch=master)](https://coveralls.io/r/thomasw/djproxy?branch=master)
 [![Latest Version](https://pypip.in/v/djproxy/badge.png)](https://pypi.python.org/pypi/djproxy/)
 [![Downloads](https://pypip.in/d/djproxy/badge.png)](https://pypi.python.org/pypi/djproxy/)
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/thomasw/djproxy/trend.png)](https://bitdeli.com/free)
