@@ -4,6 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/thomasw/djproxy/badge.png)](https://coveralls.io/r/thomasw/djproxy)
 [![Latest Version](https://pypip.in/v/djproxy/badge.png)](https://pypi.python.org/pypi/djproxy/)
 [![Downloads](https://pypip.in/d/djproxy/badge.png)](https://pypi.python.org/pypi/djproxy/)
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/thomasw/djproxy/trend.png)](https://bitdeli.com/free)
 
 djproxy is a class-based generic view reverse HTTP proxy for Django.
 
@@ -177,7 +178,3 @@ django-admin.py shell --settings=tests.test_settings --pythonpath="./"
 
 See `tests/test_settings.py` and `tests/test_urls.py` for configuration
 information.
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/thomasw/djproxy/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
