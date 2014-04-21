@@ -46,3 +46,6 @@ class HttpProxyHeaderPassThrough(TestCase, RequestPatchMixin):
         self.assertEqual(
             self.headers['X-Forwarded-For'], 'ipaddr 1, 127.0.0.1')
 
+    def test_attaches_x_forwarded_host_header(self):
+        self.assertEqual(
+            self.headers['X-Forwarded-Host'], 'testserver')

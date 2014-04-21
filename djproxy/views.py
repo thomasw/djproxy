@@ -131,6 +131,7 @@ class HttpProxy(View):
         """Return an HttpResponse built based on retrieving self.proxy_url"""
         headers = self.filter_headers(
             self.headers, self.ignored_request_headers)
+        headers['X-Forwarded-Host'] = self.request.get_host()
         headers['X-Forwarded-For'] = self.xff
 
         result = request(
