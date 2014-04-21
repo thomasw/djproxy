@@ -15,6 +15,7 @@ class HttpProxyHeaderPassThrough(TestCase, RequestPatchMixin):
         # Fake headers that are representative of how Django munges them when
         # it sticks them into the META dict.
         self.browser_request.META['HTTP_Host'] = 'cnn.com'
+        self.browser_request.META['HTTP_Fake_Header'] = 'header_value'
         self.browser_request.META['HTTP_X_Forwarded_For'] = 'ipaddr 1'
         self.browser_request.META['HTTP_UNNORMALIZED_HEADER'] = 'header value'
         self.browser_request.META['CONTENT_TYPE'] = 'header value'
@@ -33,10 +34,15 @@ class HttpProxyHeaderPassThrough(TestCase, RequestPatchMixin):
         self.assertNotIn('Host', self.headers)
 
     def test_passes_django_http_prefixed_headers_to_proxied_endpoint(self):
-        self.assertIn('X-Forwarded-For', self.headers)
+        self.assertIn('Fake-Header', self.headers)
 
     def test_normalizes_header_names(self):
         self.assertIn('Unnormalized-Header', self.headers)
 
     def test_doesnt_modify_header_values(self):
-        self.assertEqual(self.headers['X-Forwarded-For'], 'ipaddr 1')
+        self.assertEqual(self.headers['Unnormalized-Header'], 'header value')
+
+    def test_attaches_x_forwarded_for_header(self):
+        self.assertEqual(
+            self.headers['X-Forwarded-For'], 'ipaddr 1, 127.0.0.1')
+
