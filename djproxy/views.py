@@ -1,7 +1,6 @@
 import logging
 import re
-import socket
-from urlparse import urljoin, urlparse
+from urlparse import urljoin
 
 from django.http import HttpResponse
 from django.views.generic import View
@@ -47,17 +46,19 @@ class HttpProxy(View):
         return request_headers
 
     @property
-    def downstream_ip(self):
-        """IP address of the resource to be proxied."""
-        return socket.gethostbyname(urlparse(self.proxy_url).hostname)
-
-    @property
     def query_string(self):
         """Incoming request's query string"""
         if self.pass_query_string:
             return self.request.META['QUERY_STRING']
 
         return ''
+
+    @property
+    def xff(self):
+        ip = self.request.META.get('REMOTE_ADDR')
+        current_xff = self.headers.get('X-Forwarded-For')
+
+        return '%s, %s' % (current_xff, ip) if current_xff else ip
 
     def _verify_config(self):
         assert self.base_url, 'base_url must be set to generate a proxy url'
@@ -128,27 +129,23 @@ class HttpProxy(View):
 
     def proxy(self):
         """Return an HttpResponse built based on retrieving self.proxy_url"""
-        xff = self.downstream_ip
         headers = self.filter_headers(
             self.headers, self.ignored_request_headers)
+        headers['X-Forwarded-Host'] = self.request.get_host()
+        headers['X-Forwarded-For'] = self.xff
+
         result = request(
             method=self.request.method, url=self.proxy_url, headers=headers,
             data=self.request.body, params=self.query_string,
             allow_redirects=False)
 
         response = HttpResponse(result.content, status=result.status_code)
-        forwardable_headers = self.filter_headers(
-            result.headers, self.ignored_downstream_headers)
 
         # Attach forwardable headers to response
+        forwardable_headers = self.filter_headers(
+            result.headers, self.ignored_downstream_headers)
         for header, value in forwardable_headers.iteritems():
             response[header] = value
-
-        # Update X-Forwarded-For.
-        if response.get('x-forwarded-for'):
-            xff = '%s, %s' % (response['x-forwarded-for'], xff)
-
-        response['x-forwarded-for'] = xff
 
         self.adjust_location_headers(self.request, response)
 

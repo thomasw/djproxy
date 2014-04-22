@@ -41,6 +41,3 @@ class HttpProxyHeaderPassThrough(ResponseConstructionTest):
         self.assertNotIn(
             call('Content-Encoding', 'gzip'),
             self.response_stub.__setitem__.mock_calls)
-
-    def test_sets_xff_header(self):
-        self.response_stub.__setitem__.assert_any_call('x-forwarded-for', ANY)
