@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.0
+
+* Fix X-Forwarded-For handling: The XFF header is now calculated correctly and
+  sent to the proxied resource. Previously, the XFF header was being amended
+  with the server's currenet IP address and it was being sent to the requesting
+  client during the response phase. Now, the original request's header is
+  amended with the client's IP address before it is sent downstream.
+* djproxy now sends the X-Forwarded-Host header to the proxied resource
+
 ## 1.1.0
 
 * Fix proxying of redirects. Previously, djproxy would follow redirects
