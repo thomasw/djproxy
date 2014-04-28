@@ -15,6 +15,11 @@ class TestProxy(HttpProxy):
     base_url = 'https://google.com/'
 
 
+class UnverifiedSSLProxy(HttpProxy):
+    base_url = 'https://google.com/'
+    verify_ssl = False
+
+
 class ReverseProxy(HttpProxy):
     base_url = 'https://google.com/'
     reverse_urls = [

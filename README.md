@@ -60,6 +60,9 @@ urlpatterns = patterns(
   sent to the proxied endpoint.
 * `reverse_urls`: An iterable of location header replacements to be made on
   the constructed response (similar to Apache's `ProxyPassReverse` directive).
+* `verify_ssl`: This option corresponds to [requests' verify parameter][1]. It
+  may be either a boolean, which toggles SSL certificate verification on or off,
+  or the path to a CA_BUNDLE file for private certificates.
 
 ## Adjusting location headers (ProxyPassReverse)
 
@@ -116,8 +119,9 @@ configuration = {
         'prefix': '/test_prefix/',
     },
     'service_name': {
-        'base_url': 'http://service.com/',
-        'prefix': '/service_prefix/'
+        'base_url': 'https://service.com/',
+        'prefix': '/service_prefix/',
+        'verify_ssl': False
     }
 }
 
@@ -126,7 +130,7 @@ urlpatterns += generate_routes(configuration)
 
 Using the snippet above will enable your Django app to proxy
 `https://google.com/X` at `/test_prefix/X` and
-`http://service.com/Y` at `/service_prefix/Y`.
+`https://service.com/Y` at `/service_prefix/Y`.
 
 These correspond to the following production Apache proxy configuration:
 ```
@@ -138,13 +142,16 @@ ProxyPass /test_prefix/ https://google.com/
 ProxyPassReverse /test_prefix/ https://google.com/
 
 
-<Proxy http://service.com/*>
+<Proxy https://service.com/*>
     Order deny,allow
     Allow from all
 </Proxy>
 ProxyPass /service_prefix/ http://service.com/
 ProxyPassReverse /service_prefix/ http://service.com/
 ```
+
+The `verify_ssl` key is optional and defaults to True. See `verify_ssl` above
+for valid values.
 
 ## Contributing
 
@@ -177,3 +184,5 @@ django-admin.py shell --settings=tests.test_settings --pythonpath="./"
 
 See `tests/test_settings.py` and `tests/test_urls.py` for configuration
 information.
+
+[1]:http://docs.python-requests.org/en/latest/user/advanced/?highlight=verify#ssl-cert-verification

@@ -1,5 +1,5 @@
 from django.test.client import RequestFactory
-from mock import ANY, MagicMock, Mock, call
+from mock import MagicMock, Mock, call
 from unittest2 import TestCase
 
 from helpers import RequestPatchMixin, ResponsePatchMixin

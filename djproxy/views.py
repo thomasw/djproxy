@@ -21,6 +21,7 @@ class HttpProxy(View):
         'Transfer-Encoding', 'Host', 'Expect', 'Upgrade']
     pass_query_string = True
     reverse_urls = []
+    verify_ssl = True
 
     def __init__(self, *args, **kwargs):
         return super(View, self).__init__(*args, **kwargs)
@@ -137,7 +138,7 @@ class HttpProxy(View):
         result = request(
             method=self.request.method, url=self.proxy_url, headers=headers,
             data=self.request.body, params=self.query_string,
-            allow_redirects=False)
+            allow_redirects=False, verify=self.verify_ssl)
 
         response = HttpResponse(result.content, status=result.status_code)
 
