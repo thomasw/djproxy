@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.0
+* Makes HttpProxy SSL verification configurable via the `verify_ssl` class
+  variable.
+
 ## 1.2.0
 
 * Fix X-Forwarded-For handling: The XFF header is now calculated correctly and
