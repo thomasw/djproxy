@@ -60,6 +60,9 @@ urlpatterns = patterns(
   sent to the proxied endpoint.
 * `reverse_urls`: An iterable of location header replacements to be made on
   the constructed response (similar to Apache's `ProxyPassReverse` directive).
+* `verify_ssl`: This option corresponds to [requests' verify parameter][1]. It
+  may be either a boolean, which toggles SSL certificate verification on or off,
+  or the path to a CA_BUNDLE file for private certificates.
 
 ## Adjusting location headers (ProxyPassReverse)
 
@@ -177,3 +180,5 @@ django-admin.py shell --settings=tests.test_settings --pythonpath="./"
 
 See `tests/test_settings.py` and `tests/test_urls.py` for configuration
 information.
+
+[1]:http://docs.python-requests.org/en/latest/user/advanced/?highlight=verify#ssl-cert-verification

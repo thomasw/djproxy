@@ -3,7 +3,7 @@ from mock import ANY, Mock
 from unittest2 import TestCase
 
 from helpers import RequestPatchMixin
-from test_views import TestProxy
+from test_views import TestProxy, UnverifiedSSLProxy
 
 
 class HttpProxyConfigVerification(TestCase, RequestPatchMixin):
@@ -60,7 +60,7 @@ class HttpProxyUrlConstructionWithoutURLKwarg(TestCase, RequestPatchMixin):
         """only contains base_url"""
         self.request.assert_called_once_with(
             method=ANY, url='https://google.com/', data=ANY, headers=ANY,
-            params=ANY, allow_redirects=ANY)
+            params=ANY, allow_redirects=ANY, verify=ANY)
 
 
 class HttpProxyUrlConstructionWithURLKwarg(TestCase, RequestPatchMixin):
@@ -80,7 +80,7 @@ class HttpProxyUrlConstructionWithURLKwarg(TestCase, RequestPatchMixin):
         """urljoins base_url and url kwarg"""
         self.request.assert_called_once_with(
             method=ANY, url='https://google.com/yay/', data=ANY, headers=ANY,
-            params=ANY, allow_redirects=ANY)
+            params=ANY, allow_redirects=ANY, verify=ANY)
 
 
 class HttpProxyUrlConstructionWithQueryStringPassingEnabled(
@@ -100,7 +100,7 @@ class HttpProxyUrlConstructionWithQueryStringPassingEnabled(
     def test_sends_query_string_to_proxied_endpoint(self):
         self.request.assert_called_once_with(
             method=ANY, url=ANY, data=ANY, headers=ANY, params='yay=foo,bar',
-            allow_redirects=ANY)
+            allow_redirects=ANY, verify=ANY)
 
 
 class HttpProxyUrlConstructionWithoutQueryStringPassingEnabled(
@@ -122,4 +122,42 @@ class HttpProxyUrlConstructionWithoutQueryStringPassingEnabled(
     def test_doesnt_sends_query_string_to_proxied_endpoint(self):
         self.request.assert_called_once_with(
             method=ANY, url=ANY, data=ANY, headers=ANY, params='',
-            allow_redirects=ANY)
+            allow_redirects=ANY, verify=ANY)
+
+
+class HttpProxyFetchingWithVerifySSL(TestCase, RequestPatchMixin):
+    """HttpProxy content fetching with verify_ssl enabled"""
+    def setUp(self):
+        self.fake_request = RequestFactory().get('/')
+        self.proxy = TestProxy.as_view()
+
+        self.patch_request(Mock(raw='', status_code=200, headers={}))
+
+        self.proxy(self.fake_request, url='yay/')
+
+    def tearDown(self):
+        self.stop_patching_request()
+
+    def test_tells_requests_to_verify_the_SSL_certs(self):
+        self.request.assert_called_once_with(
+            method=ANY, url=ANY, data=ANY, headers=ANY, params=ANY,
+            allow_redirects=ANY, verify=True)
+
+
+class HttpProxyFetchingWithoutVerifySSL(TestCase, RequestPatchMixin):
+    """HttpProxy content fetching with verify_ssl disabled"""
+    def setUp(self):
+        self.fake_request = RequestFactory().get('/')
+        self.proxy = UnverifiedSSLProxy.as_view()
+
+        self.patch_request(Mock(raw='', status_code=200, headers={}))
+
+        self.proxy(self.fake_request, url='yay/')
+
+    def tearDown(self):
+        self.stop_patching_request()
+
+    def test_tells_requests_not_to_verify_the_ssl_certs(self):
+        self.request.assert_called_once_with(
+            method=ANY, url=ANY, data=ANY, headers=ANY, params=ANY,
+            allow_redirects=ANY, verify=False)
