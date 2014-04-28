@@ -25,8 +25,8 @@ def generate_routes(config):
         }
     })
 
-    `verify_ssl` is optional (and defaults to True), but base_url and prefix are
-    required.
+    `verify_ssl` is optional (and defaults to True), but base_url and prefix
+    are required.
 
     Returns
 
