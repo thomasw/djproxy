@@ -16,5 +16,10 @@ urlpatterns = patterns(
     'service_two': {
         'base_url': 'http://www.google.com/',
         'prefix': '/google/'
+    },
+    'service_three': {
+        'base_url': 'http://big.faker/',
+        'prefix': '/fakey/',
+        'csrf_exempt': False
     }
 })

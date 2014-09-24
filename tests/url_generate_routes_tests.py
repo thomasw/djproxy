@@ -26,6 +26,14 @@ class GenerateRoutes(TestCase):
             self.resolver.resolve('/google/kittens/').kwargs,
             {'url': 'kittens/'})
 
+    def test_csrf_exempt_is_set_to_true_by_default(self):
+        view_func = self.resolver.resolve('/google/kittens').func
+        self.assertTrue(view_func.csrf_exempt)
+
+    def test_csrf_exempt_can_be_configured_to_false(self):
+        view_func = self.resolver.resolve('/fakey/').func
+        self.assertFalse(view_func.csrf_exempt)
+
 
 class GenerateRoutesProxyViewGeneration(TestCase):
     """generate_routes build proxy views that"""
@@ -36,7 +44,7 @@ class GenerateRoutesProxyViewGeneration(TestCase):
 
         self.addCleanup(generate_proxy_patcher.stop)
 
-        generate_routes({
+        self.routes = generate_routes({
             'yahoo_proxy': {
                 'base_url': 'https://yahoo.com/',
                 'prefix': '/yahoo/',
