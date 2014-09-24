@@ -21,12 +21,13 @@ def generate_routes(config):
         'test_proxy': {
             'base_url': 'https://google.com/',
             'prefix': '/test_prefix/',
-            'verify_ssl': False
+            'verify_ssl': False,
+            'csrf_exempt: False'
         }
     })
 
-    `verify_ssl` is optional (and defaults to True), but base_url and prefix
-    are required.
+    `verify_ssl`  and `csrf_exempt` are optional (and default to True), but
+    base_url and prefix are required.
 
     Returns
 
