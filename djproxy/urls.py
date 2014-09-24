@@ -10,7 +10,7 @@ def generate_proxy(prefix, base_url='', verify_ssl=True):
     return type('ProxyClass', (HttpProxy,), {
         'base_url': base_url,
         'reverse_urls': [(prefix, base_url)],
-        'verify_ssl': verify_ssl
+        'verify_ssl': verify_ssl,
     })
 
 
@@ -21,12 +21,13 @@ def generate_routes(config):
         'test_proxy': {
             'base_url': 'https://google.com/',
             'prefix': '/test_prefix/',
-            'verify_ssl': False
+            'verify_ssl': False,
+            'csrf_exempt: False'
         }
     })
 
-    `verify_ssl` is optional (and defaults to True), but base_url and prefix
-    are required.
+    `verify_ssl`  and `csrf_exempt` are optional (and default to True), but
+    base_url and prefix are required.
 
     Returns
 
@@ -42,7 +43,10 @@ def generate_routes(config):
         proxy = generate_proxy(
             config['prefix'], config['base_url'],
             config.get('verify_ssl', True))
+        proxy_view_function = proxy.as_view()
 
-        routes.append(url(pattern, proxy.as_view(), name=name))
+        proxy_view_function.csrf_exempt = config.get('csrf_exempt', True)
+
+        routes.append(url(pattern, proxy_view_function, name=name))
 
     return patterns('', *routes)
