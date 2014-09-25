@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.4.0
+* Disable CSRF checks by default for proxies created with `generate_routes`
+
 ## 1.3.0
 * Makes HttpProxy SSL verification configurable via the `verify_ssl` class
   variable.
