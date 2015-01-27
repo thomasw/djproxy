@@ -10,7 +10,7 @@ class HttpProxyReverseURLRuleProcessing(TestCase, RequestPatchMixin):
     """HttpProxy reverse URL rule processing"""
     def setUp(self):
         self.proxy = ReverseProxy.as_view()
-        self.browser_request = RequestFactory().get('/')
+        self.browser_request = RequestFactory().get('/google/')
 
         # Simulate a downstream response that has location headers
         self.patch_request(Mock(headers={
@@ -37,3 +37,8 @@ class HttpProxyReverseURLRuleProcessing(TestCase, RequestPatchMixin):
     def test_leaves_non_location_headers_unchanged(self):
         self.assertEqual(
             self.response['Blurp-Location'], 'https://google.com/foo/')
+
+    def test_attaches_x_forwarded_prefix_header(self):
+        _, request_kwargs = self.request.call_args
+        headers = request_kwargs['headers']
+        self.assertEqual(headers['X-Forwarded-Prefix'], '/google/')
