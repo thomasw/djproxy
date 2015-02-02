@@ -12,6 +12,8 @@ DATABASES = {
     }
 }
 
+MIDDLEWARE_CLASSES = []
+
 INSTALLED_APPS = (
     'djproxy',
 )
