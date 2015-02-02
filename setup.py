@@ -7,7 +7,7 @@ from djproxy import __version__, __author__
 try:
     import multiprocessing
     multiprocessing  # resolve unused import pep8 violation by 'using' it
-except:
+except ImportError:
     pass
 
 setup(
