@@ -20,7 +20,7 @@ class HttpProxyReverseURLRuleProcessing(TestCase, RequestPatchMixin):
             'Blurp-Location': 'https://google.com/foo/'
         }))
 
-        self.response = self.proxy(self.browser_request)
+        self.response = self.proxy(self.browser_request, url='foo/')
 
     def test_patches_the_location_header(self):
         self.assertEqual(

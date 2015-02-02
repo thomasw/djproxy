@@ -136,7 +136,7 @@ class HttpProxy(View):
         headers['X-Forwarded-For'] = self.xff
 
         for prefix, url in self.reverse_urls:
-            if url == self.proxy_url and self.request.path.startswith(prefix):
+            if self.proxy_url.startswith(url) and self.request.path.startswith(prefix):
                 headers['X-Forwarded-Prefix'] = prefix
 
         result = request(
