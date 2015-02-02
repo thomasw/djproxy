@@ -10,7 +10,7 @@ class HttpProxyReverseURLRuleProcessing(TestCase, RequestPatchMixin):
     """HttpProxy reverse URL rule processing"""
     def setUp(self):
         self.proxy = ReverseProxy.as_view()
-        self.browser_request = RequestFactory().get('/google/')
+        self.browser_request = RequestFactory().get('/google/foo/')
 
         # Simulate a downstream response that has location headers
         self.patch_request(Mock(headers={
