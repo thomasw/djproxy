@@ -6,8 +6,8 @@ mock==1.0.1
 nose==1.3.0
 pep257==0.4.1
 pinocchio==0.3.1
-testtube==0.0.1
 pyflakes==0.8.1
+testtube==1.0.0
 unittest2==0.5.1
 
 # Functional requirements
