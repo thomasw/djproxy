@@ -12,4 +12,7 @@ unittest2==0.5.1
 
 # Functional requirements
 requests>=1.0.0
-django>=1.4
+# We need to use a version of Django less than 1.7 to test all versions of
+# Python that are currently supported. If you'd like to test this with 1.7,
+# just install it manually and you're good to go.
+django >=1.4,<1.7
