@@ -14,7 +14,12 @@ in JavaScript, perhaps), djproxy can be used during development to provide that
 functionality.
 
 djproxy is not intended to be used in production, but should suffice for
-development. Use your web server's proxy capabilities in the wild.
+development. Use your web server's proxy capabilities in the wild. If you need
+to use this in production for some reason, it should be sufficiently performant
+as long as the upstream responses aren't large. Performance can be further
+increased by aggressively caching upstream responses.
+
+Note that djproxy doesn't currently support websockets.
 
 ## Installation
 
@@ -123,7 +128,8 @@ configuration = {
     'service_name': {
         'base_url': 'https://service.com/',
         'prefix': '/service_prefix/',
-        'verify_ssl': False
+        'verify_ssl': False,
+        'append_middlware': ['myapp.proxy_middleware.add_headers']
     }
 }
 
@@ -152,8 +158,45 @@ ProxyPass /service_prefix/ http://service.com/
 ProxyPassReverse /service_prefix/ http://service.com/
 ```
 
-The `verify_ssl` key is optional and defaults to True. See `verify_ssl` above
-for valid values.
+`verify_ssl`  and `csrf_exempt` are optional (and default to True), but
+base_url and prefix are required.
+
+`middleware` and `append_middleware` are also optional. If neither are present,
+the default proxy middleware set will be used. If middleware is specified,
+then the default proxy middleware list will be replaced. If
+append_middleware is specified, the list will be appended to the end of
+the middleware set. Use `append_middleware` if you want to add additional
+proxy behaviors without modifying the default behaviors.
+
+## Proxy middleware
+
+HttpProxys support custom middleware for preprocessing data from downstream
+to be sent to upstream endpoints and for preprocessing response data before
+it is sent back downstream. `X-Forwarded-Host`, `X-Forwarded-For`, and the
+`ProxyPassRevere` functionality area all implemented as middleware.
+
+HttProxy views are configured to execute particular middleware by setting
+their `proxy_middleware` attribute. The following HttpProxy would attach XFF and
+XFH headers, but not preform the ProxyPassReverse header translation:
+
+```python
+class ReverseProxy(HttpProxy):
+    base_url = 'https://google.com/'
+    reverse_urls = [
+        ('/google/', 'https://google.com/')
+    ]
+    proxy_middleware = [
+        'djproxy.proxy_middleware.AddXFF',
+        'djproxy.proxy_middleware.AddXFH'
+    ]
+```
+
+If you need to write your own middleware to modify content, headers, cookies,
+etc before the content is sent upstream of if you need to make similar
+modifications before the content is sent back downstream, you can write your own
+middleware and configure your view to use it. djproxy contains a [middleware
+template][2] to help you with this.
+
 ## Terminology
 
 It is important to understand the meaning of these terms in the context of this
@@ -196,3 +239,4 @@ See `tests/test_settings.py` and `tests/test_urls.py` for configuration
 information.
 
 [1]:http://docs.python-requests.org/en/latest/user/advanced/?highlight=verify#ssl-cert-verification
+[2]:https://github.com/thomasw/djproxy/blob/master/djproxy/proxy_middleware.py#L32
