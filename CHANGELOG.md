@@ -13,7 +13,7 @@
   sent to the proxied resource. Previously, the XFF header was being amended
   with the server's currenet IP address and it was being sent to the requesting
   client during the response phase. Now, the original request's header is
-  amended with the client's IP address before it is sent downstream.
+  amended with the client's IP address before it is sent upstream.
 * djproxy now sends the X-Forwarded-Host header to the proxied resource
 
 ## 1.1.0

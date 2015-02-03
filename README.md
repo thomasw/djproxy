@@ -52,7 +52,7 @@ urlpatterns = patterns(
 
 * `base_url`: The proxy url is formed by
    `urlparse.urljoin(base_url, url_kwarg)`
-* `ignored_downstream_headers`: A list of headers that shouldn't be forwarded
+* `ignored_upstream_headers`: A list of headers that shouldn't be forwarded
   to the browser from the proxied endpoint.
 * `ignored_request_headers`: A list of headers that shouldn't be forwarded
   to the proxied endpoint from the browser.
@@ -152,6 +152,14 @@ ProxyPassReverse /service_prefix/ http://service.com/
 
 The `verify_ssl` key is optional and defaults to True. See `verify_ssl` above
 for valid values.
+## Terminology
+
+It is important to understand the meaning of these terms in the context of this
+project:
+
+**upstream**: The destination that is being proxied.
+
+**downstream**: The agent that initiated the request to djproxy.
 
 ## Contributing
 

@@ -13,7 +13,7 @@ class HttpProxy(View):
     """Reverse HTTP Proxy class-based generic view."""
 
     base_url = None
-    ignored_downstream_headers = [
+    ignored_upstream_headers = [
         'Content-Length', 'Content-Encoding', 'Keep-Alive', 'Connection',
         'Transfer-Encoding', 'Host', 'Expect', 'Upgrade']
     ignored_request_headers = [
