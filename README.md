@@ -56,6 +56,8 @@ urlpatterns = patterns(
   to the browser from the proxied endpoint.
 * `ignored_request_headers`: A list of headers that shouldn't be forwarded
   to the proxied endpoint from the browser.
+* `proxy_middleware`: A list of proxy middleware to apply to request and
+  response data.
 * `pass_query_string`: A boolean indicating whether the query string should be
   sent to the proxied endpoint.
 * `reverse_urls`: An iterable of location header replacements to be made on

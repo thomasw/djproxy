@@ -48,18 +48,22 @@ class GenerateRoutesProxyViewGeneration(TestCase):
             'yahoo_proxy': {
                 'base_url': 'https://yahoo.com/',
                 'prefix': '/yahoo/',
-                'verify_ssl': False
+                'verify_ssl': False,
+                'middleware': ['foo'],
+                'append_middleware': ['bar']
             },
         })
 
     def test_are_configured_using_the_configuration_dict(self):
         self.generate_proxy_mock.assert_called_once_with(
-            '/yahoo/', 'https://yahoo.com/', False)
+            prefix='/yahoo/', base_url='https://yahoo.com/', verify_ssl=False,
+            middleware=['foo'], append_middleware=['bar'])
 
 
 class GenerateProxy(TestCase):
     def setUp(self):
-        self.proxy = generate_proxy('/google/', 'http://google.com/', False)
+        self.proxy = generate_proxy(
+            '/google/', 'http://google.com/', False, ['foo'], ['bar'])
 
     def test_yields_an_HttpProxy_CBGV(self):
         self.assertTrue(issubclass(self.proxy, HttpProxy))
@@ -69,3 +73,6 @@ class GenerateProxy(TestCase):
 
     def test_sets_the_verify_ssl_flag_to_the_passed_value(self):
         self.assertFalse(self.proxy.verify_ssl)
+
+    def test_sets_the_proxy_middleware_list_to_the_proper_middleware(self):
+        self.assertEqual(self.proxy.proxy_middleware, ['foo', 'bar'])
