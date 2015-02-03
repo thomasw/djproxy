@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.0.0
+* Renamed `HttpProxy.igorned_downstream_headers` to `ignored_upstream_headers`
+* Added middleware proxy functionality for modifying content, headers before
+  requests/responses are sent upstream or downstream.
+* Moved XFF header functionality to a middleware
+* Moved XFH header functionality to a middleware
+* Moved reverse proxy functinality to a middleware
+* Updated generate routes to support configuring middleware
+* Reorganized the internal structure of the app for sanity's sake.
+
 ## 1.4.0
 * Disable CSRF checks by default for proxies created with `generate_routes`
 
