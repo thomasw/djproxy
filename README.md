@@ -14,7 +14,12 @@ in JavaScript, perhaps), djproxy can be used during development to provide that
 functionality.
 
 djproxy is not intended to be used in production, but should suffice for
-development. Use your web server's proxy capabilities in the wild.
+development. Use your web server's proxy capabilities in the wild. If you need
+to use this in production for some reason, it should be sufficiently performant
+as long as the upstream responses aren't large. Performance can be further
+increased by aggressively caching upstream responses.
+
+Note that djproxy doesn't currently support websockets.
 
 ## Installation
 
@@ -52,10 +57,12 @@ urlpatterns = patterns(
 
 * `base_url`: The proxy url is formed by
    `urlparse.urljoin(base_url, url_kwarg)`
-* `ignored_downstream_headers`: A list of headers that shouldn't be forwarded
+* `ignored_upstream_headers`: A list of headers that shouldn't be forwarded
   to the browser from the proxied endpoint.
 * `ignored_request_headers`: A list of headers that shouldn't be forwarded
   to the proxied endpoint from the browser.
+* `proxy_middleware`: A list of proxy middleware to apply to request and
+  response data.
 * `pass_query_string`: A boolean indicating whether the query string should be
   sent to the proxied endpoint.
 * `reverse_urls`: An iterable of location header replacements to be made on
@@ -121,7 +128,8 @@ configuration = {
     'service_name': {
         'base_url': 'https://service.com/',
         'prefix': '/service_prefix/',
-        'verify_ssl': False
+        'verify_ssl': False,
+        'append_middlware': ['myapp.proxy_middleware.add_headers']
     }
 }
 
@@ -150,8 +158,53 @@ ProxyPass /service_prefix/ http://service.com/
 ProxyPassReverse /service_prefix/ http://service.com/
 ```
 
-The `verify_ssl` key is optional and defaults to True. See `verify_ssl` above
-for valid values.
+`verify_ssl`  and `csrf_exempt` are optional (and default to True), but
+base_url and prefix are required.
+
+`middleware` and `append_middleware` are also optional. If neither are present,
+the default proxy middleware set will be used. If middleware is specified,
+then the default proxy middleware list will be replaced. If
+append_middleware is specified, the list will be appended to the end of
+the middleware set. Use `append_middleware` if you want to add additional
+proxy behaviors without modifying the default behaviors.
+
+## Proxy middleware
+
+HttpProxys support custom middleware for preprocessing data from downstream
+to be sent to upstream endpoints and for preprocessing response data before
+it is sent back downstream. `X-Forwarded-Host`, `X-Forwarded-For`, and the
+`ProxyPassRevere` functionality area all implemented as middleware.
+
+HttProxy views are configured to execute particular middleware by setting
+their `proxy_middleware` attribute. The following HttpProxy would attach XFF and
+XFH headers, but not preform the ProxyPassReverse header translation:
+
+```python
+class ReverseProxy(HttpProxy):
+    base_url = 'https://google.com/'
+    reverse_urls = [
+        ('/google/', 'https://google.com/')
+    ]
+    proxy_middleware = [
+        'djproxy.proxy_middleware.AddXFF',
+        'djproxy.proxy_middleware.AddXFH'
+    ]
+```
+
+If you need to write your own middleware to modify content, headers, cookies,
+etc before the content is sent upstream of if you need to make similar
+modifications before the content is sent back downstream, you can write your own
+middleware and configure your view to use it. djproxy contains a [middleware
+template][2] to help you with this.
+
+## Terminology
+
+It is important to understand the meaning of these terms in the context of this
+project:
+
+**upstream**: The destination that is being proxied.
+
+**downstream**: The agent that initiated the request to djproxy.
 
 ## Contributing
 
@@ -166,8 +219,8 @@ the 1.5 installation from `requirements.txt` by installing the desired version.
 
 Run `nosetests` to execute the test suite.
 
-To automatically run the test suite, pyflakes, and pep8 checks whenever python
-files change use testtube by executing `stir` in the top level djproxy
+To automatically run the test suite, flake8, frosted, and pep257 checks whenever
+python files change use testtube by executing `stir` in the top level djproxy
 directory.
 
 To run a Django dev server that proxies itself, execute the following:
@@ -186,3 +239,4 @@ See `tests/test_settings.py` and `tests/test_urls.py` for configuration
 information.
 
 [1]:http://docs.python-requests.org/en/latest/user/advanced/?highlight=verify#ssl-cert-verification
+[2]:https://github.com/thomasw/djproxy/blob/master/djproxy/proxy_middleware.py#L32

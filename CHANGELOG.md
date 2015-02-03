@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.0.0
+* Renamed `HttpProxy.igorned_downstream_headers` to `ignored_upstream_headers`
+* Added middleware proxy functionality for modifying content, headers before
+  requests/responses are sent upstream or downstream.
+* Moved XFF header functionality to a middleware
+* Moved XFH header functionality to a middleware
+* Moved reverse proxy functinality to a middleware
+* Updated generate routes to support configuring middleware
+* Reorganized the internal structure of the app for sanity's sake.
+
 ## 1.4.0
 * Disable CSRF checks by default for proxies created with `generate_routes`
 
@@ -13,7 +23,7 @@
   sent to the proxied resource. Previously, the XFF header was being amended
   with the server's currenet IP address and it was being sent to the requesting
   client during the response phase. Now, the original request's header is
-  amended with the client's IP address before it is sent downstream.
+  amended with the client's IP address before it is sent upstream.
 * djproxy now sends the X-Forwarded-Host header to the proxied resource
 
 ## 1.1.0

@@ -12,7 +12,7 @@ class HttpProxyConfigVerification(TestCase, RequestPatchMixin):
         self.proxy = TestProxy.as_view()
 
         self.orig_base_url = TestProxy.base_url
-        self.orig_downstream_headers = TestProxy.ignored_downstream_headers
+        self.orig_upstream_headers = TestProxy.ignored_upstream_headers
         self.orig_request_headers = TestProxy.ignored_request_headers
 
         # Keep things fast by making sure that proxying doesn't actually
@@ -23,15 +23,15 @@ class HttpProxyConfigVerification(TestCase, RequestPatchMixin):
         self.stop_patching_request()
 
         TestProxy.base_url = self.orig_base_url
-        TestProxy.ignored_downstream_headers = self.orig_downstream_headers
+        TestProxy.ignored_upstream_headers = self.orig_upstream_headers
         TestProxy.ignored_request_headers = self.orig_request_headers
 
     def test_raises_an_exception_if_the_proxy_has_no_base_url(self):
         TestProxy.base_url = ''
         self.assertRaises(AssertionError, self.proxy, self.fake_request)
 
-    def test_raises_an_exception_if_downstream_ignore_list_not_iterable(self):
-        TestProxy.ignored_downstream_headers = None
+    def test_raises_an_exception_if_upstream_ignore_list_not_iterable(self):
+        TestProxy.ignored_upstream_headers = None
         self.assertRaises(TypeError, self.proxy, self.fake_request)
 
     def test_raises_an_exception_if_request_headers_ignore_list_not_iterable(

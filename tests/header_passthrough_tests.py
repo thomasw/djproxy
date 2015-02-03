@@ -27,25 +27,5 @@ class HttpProxyHeaderPassThrough(TestCase, RequestPatchMixin):
         # The value of the headers kwarg that gets passed to request_methd
         self.headers = self.request.mock_calls[0][2]['headers']
 
-    def test_passes_non_http_prefixed_headers_to_proxied_endpoint(self):
-        self.assertIn('Content-Type', self.headers)
-
     def test_filters_disallowed_headers(self):
         self.assertNotIn('Host', self.headers)
-
-    def test_passes_django_http_prefixed_headers_to_proxied_endpoint(self):
-        self.assertIn('Fake-Header', self.headers)
-
-    def test_normalizes_header_names(self):
-        self.assertIn('Unnormalized-Header', self.headers)
-
-    def test_doesnt_modify_header_values(self):
-        self.assertEqual(self.headers['Unnormalized-Header'], 'header value')
-
-    def test_attaches_x_forwarded_for_header(self):
-        self.assertEqual(
-            self.headers['X-Forwarded-For'], 'ipaddr 1, 127.0.0.1')
-
-    def test_attaches_x_forwarded_host_header(self):
-        self.assertEqual(
-            self.headers['X-Forwarded-Host'], 'testserver')
