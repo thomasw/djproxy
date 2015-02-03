@@ -17,7 +17,7 @@ def import_string(dotted_path):
     except ValueError:
         raise ImportError('%s doesn\'t look like a valid path' % dotted_path)
 
-    module = __import__(module_path, fromlist=['class_name'])
+    module = __import__(module_path, fromlist=[class_name])
 
     try:
         return getattr(module, class_name)
