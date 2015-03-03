@@ -91,6 +91,16 @@ class AddXFH(object):
         return kwargs
 
 
+class AddXFP(object):
+    """Add a X-Forwarded-Proto header to the upstream request."""
+
+    def process_request(self, proxy, request, **kwargs):
+        proto = 'https' if request.is_secure() else 'http'
+        kwargs['headers']['X-Forwarded-Proto'] = proto
+
+        return kwargs
+
+
 class ProxyPassReverse(object):
 
     """Applies reverse url rules to location headers like ProxyPassReverse.

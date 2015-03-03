@@ -3,7 +3,7 @@ from django.test.client import RequestFactory
 from mock import Mock
 from unittest2 import TestCase
 
-from djproxy.proxy_middleware import AddXFF, AddXFH, ProxyPassReverse
+from djproxy.proxy_middleware import AddXFF, AddXFH, AddXFP, ProxyPassReverse
 from djproxy.request import DownstreamRequest
 
 
@@ -29,6 +29,23 @@ class AddXFHMiddlewareTest(TestCase):
     def test_adds_an_XFH_header(self):
         self.assertEqual(
             self.kwargs['headers']['X-Forwarded-Host'], 'testserver')
+
+
+class AddXFPMiddlewareTest(TestCase):
+    def get_kwargs(self, secure):
+        request = Mock()
+        request.is_secure.return_value = secure
+        return AddXFP().process_request(Mock(), request, headers={})
+
+    def test_sets_XFP_header_to_https_if_request_is_secure(self):
+        kwargs = self.get_kwargs(secure=True)
+        self.assertEqual(
+            kwargs['headers']['X-Forwarded-Proto'], 'https')
+
+    def test_sets_XFP_header_to_http_if_request_is_not_secure(self):
+        kwargs = self.get_kwargs(secure=False)
+        self.assertEqual(
+            kwargs['headers']['X-Forwarded-Proto'], 'http')
 
 
 class ProxyPassReverseTest(TestCase):
