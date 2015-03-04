@@ -24,6 +24,7 @@ class HttpProxy(View):
     proxy_middleware = [
         'djproxy.proxy_middleware.AddXFF',
         'djproxy.proxy_middleware.AddXFH',
+        'djproxy.proxy_middleware.AddXFP',
         'djproxy.proxy_middleware.ProxyPassReverse'
     ]
     pass_query_string = True
