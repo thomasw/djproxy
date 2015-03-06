@@ -172,12 +172,14 @@ proxy behaviors without modifying the default behaviors.
 
 HttpProxys support custom middleware for preprocessing data from downstream
 to be sent to upstream endpoints and for preprocessing response data before
-it is sent back downstream. `X-Forwarded-Host`, `X-Forwarded-For`, and the
-`ProxyPassRevere` functionality area all implemented as middleware.
+it is sent back downstream. `X-Forwarded-Host`, `X-Forwarded-For`,
+`X-Forwarded-Proto` and the `ProxyPassRevere` functionality area all implemented
+as middleware.
 
 HttProxy views are configured to execute particular middleware by setting
 their `proxy_middleware` attribute. The following HttpProxy would attach XFF and
-XFH headers, but not preform the ProxyPassReverse header translation:
+XFH headers, but not preform the ProxyPassReverse header translation or attach
+an XFP header:
 
 ```python
 class ReverseProxy(HttpProxy):
