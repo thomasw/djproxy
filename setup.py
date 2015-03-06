@@ -17,12 +17,12 @@ setup(
     download_url='https://github.com/thomasw/djproxy/releases',
     author=__author__,
     author_email='thomas.welfley+djproxy@gmail.com',
-    packages=find_packages(),
     tests_require=[
         'mock==1.0.1', 'nose==1.3.0', 'pinocchio==0.3.1', 'pyflakes==0.7.3',
         'unittest2==0.5.1', 'requests>=1.0.0', 'django>=1.4'],
     install_requires=['requests>=1.0.0', 'django>=1.4'],
     description=__doc__,
+    packages=find_packages(exclude=['tests', 'tests.*']),
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
