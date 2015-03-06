@@ -1,12 +1,20 @@
 # Changelog
 
+## 2.1.0
+* Adds a middleware that sends an X-Forwarded-Proto header to upstream endpoints
+  based on whether or not the incoming connection is https or http.
+* Adds the `X-Forwarded-Proto` middleware to HttpProxy views by default.
+* Resolves an issue that would cause djproxy to fail to install in python 2.6
+  if django wasn't already installed.
+* Adds a MANIFEST.in file so that relevant assets are bundled with dists.
+
 ## 2.0.0
 * Renamed `HttpProxy.igorned_downstream_headers` to `ignored_upstream_headers`
 * Added middleware proxy functionality for modifying content, headers before
   requests/responses are sent upstream or downstream.
 * Moved XFF header functionality to a middleware
 * Moved XFH header functionality to a middleware
-* Moved reverse proxy functinality to a middleware
+* Moved reverse proxy functionality to a middleware
 * Updated generate routes to support configuring middleware
 * Reorganized the internal structure of the app for sanity's sake.
 
