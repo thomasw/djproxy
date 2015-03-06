@@ -1,4 +1,5 @@
 from setuptools import setup, find_packages
+import sys
 
 from djproxy import __author__, __doc__, __version__
 
@@ -10,6 +11,16 @@ try:
 except ImportError:
     pass
 
+install_requires = ['requests>=1.0.0', 'django>=1.4']
+tests_require = [
+    'mock==1.0.1', 'nose==1.3.0', 'pinocchio==0.3.1', 'pyflakes==0.7.3',
+    'unittest2==0.5.1', 'requests>=1.0.0', 'django>=1.4']
+
+# Django >= 1.7 is not 2.6 compatible
+if sys.version_info[:2] < (2, 7):
+    install_requires += ['django<1.7']
+    tests_require += ['django<1.7']
+
 setup(
     name="djproxy",
     version=__version__,
@@ -17,12 +28,10 @@ setup(
     download_url='https://github.com/thomasw/djproxy/releases',
     author=__author__,
     author_email='thomas.welfley+djproxy@gmail.com',
-    tests_require=[
-        'mock==1.0.1', 'nose==1.3.0', 'pinocchio==0.3.1', 'pyflakes==0.7.3',
-        'unittest2==0.5.1', 'requests>=1.0.0', 'django>=1.4'],
-    install_requires=['requests>=1.0.0', 'django>=1.4'],
     description=__doc__,
     packages=find_packages(exclude=['tests', 'tests.*']),
+    tests_require=tests_require,
+    install_requires=install_requires,
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
