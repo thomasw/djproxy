@@ -13,8 +13,8 @@ except ImportError:
 
 install_requires = ['requests>=1.0.0', 'django>=1.4']
 tests_require = [
-    'mock==1.0.1', 'nose==1.3.0', 'pinocchio==0.3.1', 'pyflakes==0.7.3',
-    'unittest2==0.5.1', 'requests>=1.0.0', 'django>=1.4']
+    'mock==1.0.1', 'nose==1.3.0', 'unittest2==0.5.1', 'requests>=1.0.0',
+    'django>=1.4']
 
 # Django >= 1.7 is not 2.6 compatible
 if sys.version_info[:2] < (2, 7):
