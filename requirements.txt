@@ -1,12 +1,11 @@
 # Testing
 coveralls==0.4.1
-flake8==2.3.0
+flake8==2.4.0
 frosted==1.4.1
 mock==1.0.1
 nose==1.3.0
-pep257==0.4.1
+pep257==0.5.0
 pinocchio==0.3.1
-pyflakes==0.8.1
 testtube==1.0.0
 unittest2==0.5.1
 
