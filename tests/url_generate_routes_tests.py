@@ -63,7 +63,8 @@ class GenerateRoutesProxyViewGeneration(TestCase):
 class GenerateProxy(TestCase):
     def setUp(self):
         self.proxy = generate_proxy(
-            '/google/', 'http://google.com/', False, ['foo'], ['bar'])
+            prefix='/google/', base_url='http://google.com/', verify_ssl=False,
+            middleware=['foo'], append_middleware=['bar'], stream=True)
 
     def test_yields_an_HttpProxy_CBGV(self):
         self.assertTrue(issubclass(self.proxy, HttpProxy))
@@ -76,3 +77,6 @@ class GenerateProxy(TestCase):
 
     def test_sets_the_proxy_middleware_list_to_the_proper_middleware(self):
         self.assertEqual(self.proxy.proxy_middleware, ['foo', 'bar'])
+
+    def test_sets_the_stream_flag_to_the_passed_value(self):
+        self.assertTrue(self.proxy.stream)
