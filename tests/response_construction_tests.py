@@ -1,8 +1,9 @@
 from django.http import HttpResponse, StreamingHttpResponse
 from django.test.client import RequestFactory
-from mock import MagicMock, Mock, call
+from mock import ANY, MagicMock, Mock, call
 from unittest2 import TestCase
 
+from djproxy.response import ProxyResponse
 
 from helpers import (
     generate_upstream_response_stub, RequestPatchMixin, ResponsePatchMixin)
@@ -17,7 +18,9 @@ class ResponseConstructionTest(
 
         self.proxy_stub = generate_upstream_response_stub()
         self.patch_request(self.proxy_stub)
-        self.patch_response(MagicMock())
+
+        self.response_stub = MagicMock()
+        self.patch_response(self.response_stub)
 
         self.proxy(self.browser_request)
 
@@ -27,9 +30,9 @@ class ResponseConstructionTest(
 
 
 class HttpProxyContentPassThrough(ResponseConstructionTest):
-    def test_creates_response_object_with_proxied_content_and_status(self):
+    def test_creates_response_object_with_proxied_content(self):
         self.response_mock.assert_called_once_with(
-            'upstream content', status=200)
+            response=self.proxy_stub, stream=ANY)
 
 
 class HttpProxyHeaderPassThrough(ResponseConstructionTest):

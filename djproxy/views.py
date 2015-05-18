@@ -1,13 +1,13 @@
 """HTTP Reverse Proxy class based generic view."""
 from urlparse import urljoin
 
-from django.http import HttpResponse
 from django.views.generic import View
 from requests import request
 
 from headers import HeaderDict
 from proxy_middleware import MiddlewareSet
 from request import DownstreamRequest
+from response import ProxyResponse
 
 
 class HttpProxy(View):
@@ -30,6 +30,7 @@ class HttpProxy(View):
     pass_query_string = True
     reverse_urls = []
     verify_ssl = True
+    stream = True
 
     def __init__(self, *args, **kwargs):
         return super(View, self).__init__(*args, **kwargs)
@@ -67,11 +68,13 @@ class HttpProxy(View):
         request_kwargs = self.middleware.process_request(
             self, self.request, method=self.request.method, url=self.proxy_url,
             headers=headers, data=self.request.body, params=qs,
-            allow_redirects=False, verify=self.verify_ssl)
+            allow_redirects=False, verify=self.verify_ssl,
+            stream=self.stream)
 
         result = request(**request_kwargs)
 
-        response = HttpResponse(result.content, status=result.status_code)
+        response = ProxyResponse(response=result, stream=self.stream)
+        response = response.generate_django_response()
 
         # Attach forwardable headers to response
         forwardable_headers = HeaderDict(result.headers).filter(

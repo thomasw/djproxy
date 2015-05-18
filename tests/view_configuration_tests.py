@@ -58,7 +58,7 @@ class HttpProxyUrlConstructionWithoutURLKwarg(TestCase, RequestPatchMixin):
         """only contains base_url"""
         self.request.assert_called_once_with(
             method=ANY, url='https://google.com/', data=ANY, headers=ANY,
-            params=ANY, allow_redirects=ANY, verify=ANY)
+            params=ANY, allow_redirects=ANY, verify=ANY, stream=ANY)
 
 
 class HttpProxyUrlConstructionWithURLKwarg(TestCase, RequestPatchMixin):
@@ -78,7 +78,7 @@ class HttpProxyUrlConstructionWithURLKwarg(TestCase, RequestPatchMixin):
         """urljoins base_url and url kwarg"""
         self.request.assert_called_once_with(
             method=ANY, url='https://google.com/yay/', data=ANY, headers=ANY,
-            params=ANY, allow_redirects=ANY, verify=ANY)
+            params=ANY, allow_redirects=ANY, verify=ANY, stream=ANY)
 
 
 class HttpProxyUrlConstructionWithQueryStringPassingEnabled(
@@ -98,7 +98,7 @@ class HttpProxyUrlConstructionWithQueryStringPassingEnabled(
     def test_sends_query_string_to_proxied_endpoint(self):
         self.request.assert_called_once_with(
             method=ANY, url=ANY, data=ANY, headers=ANY, params='yay=foo,bar',
-            allow_redirects=ANY, verify=ANY)
+            allow_redirects=ANY, verify=ANY, stream=ANY)
 
 
 class HttpProxyUrlConstructionWithoutQueryStringPassingEnabled(
@@ -120,7 +120,7 @@ class HttpProxyUrlConstructionWithoutQueryStringPassingEnabled(
     def test_doesnt_sends_query_string_to_proxied_endpoint(self):
         self.request.assert_called_once_with(
             method=ANY, url=ANY, data=ANY, headers=ANY, params='',
-            allow_redirects=ANY, verify=ANY)
+            allow_redirects=ANY, verify=ANY, stream=ANY)
 
 
 class HttpProxyFetchingWithVerifySSL(TestCase, RequestPatchMixin):
@@ -139,7 +139,7 @@ class HttpProxyFetchingWithVerifySSL(TestCase, RequestPatchMixin):
     def test_tells_requests_to_verify_the_SSL_certs(self):
         self.request.assert_called_once_with(
             method=ANY, url=ANY, data=ANY, headers=ANY, params=ANY,
-            allow_redirects=ANY, verify=True)
+            allow_redirects=ANY, verify=True, stream=ANY)
 
 
 class HttpProxyFetchingWithoutVerifySSL(TestCase, RequestPatchMixin):
@@ -158,4 +158,4 @@ class HttpProxyFetchingWithoutVerifySSL(TestCase, RequestPatchMixin):
     def test_tells_requests_not_to_verify_the_ssl_certs(self):
         self.request.assert_called_once_with(
             method=ANY, url=ANY, data=ANY, headers=ANY, params=ANY,
-            allow_redirects=ANY, verify=False)
+            allow_redirects=ANY, verify=False, stream=ANY)

@@ -1,4 +1,3 @@
-from mock import patch
 from mock import patch, Mock
 
 
@@ -33,8 +32,6 @@ class RequestPatchMixin(object):
 
         self.request.return_value = mock_proxy_response
 
-        self.mock_proxy_response = mock_proxy_response
-
         return self.request
 
     def stop_patching_request(self):
@@ -42,15 +39,13 @@ class RequestPatchMixin(object):
 
 
 class ResponsePatchMixin(object):
-    def patch_response(self, stub_response):
+    def patch_response(self, stub):
         """patches HttpResponse and sets its return_value"""
-        self.response_patcher = patch('djproxy.views.HttpResponse')
+        self.response_patcher = patch('djproxy.views.ProxyResponse')
         self.response_mock = self.response_patcher.start()
 
-        self.response_mock.return_value = stub_response
-        self.response_stub = stub_response
-
-        return self.response_mock
+        proxy_response_obj = self.response_mock.return_value
+        proxy_response_obj.generate_django_response.return_value = stub
 
     def stop_patching_response(self):
         self.response_patcher.stop()
