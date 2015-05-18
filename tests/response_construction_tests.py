@@ -1,3 +1,4 @@
+from django.http import HttpResponse, StreamingHttpResponse
 from django.test.client import RequestFactory
 from mock import MagicMock, Mock, call
 from unittest2 import TestCase
@@ -41,3 +42,49 @@ class HttpProxyHeaderPassThrough(ResponseConstructionTest):
         self.assertNotIn(
             call('Content-Encoding', 'gzip'),
             self.response_stub.__setitem__.mock_calls)
+
+
+class StreamingProxyResponseGeneration(TestCase):
+    def setUp(self):
+        self.upstream_response_stub = Mock()
+        self.upstream_response_stub.iter_lines.return_value = ['some content']
+
+        self.proxy_response = ProxyResponse(
+            response=self.upstream_response_stub, stream=True)
+        self.django_response = self.proxy_response.generate_django_response()
+
+    def test_generates_a_streaming_django_response(self):
+        self.assertIsInstance(self.django_response, StreamingHttpResponse)
+
+    def test_appropriately_passes_streaming_content_to_django_response(self):
+        self.assertEqual(
+            [x for x in self.django_response.streaming_content],
+            self.upstream_response_stub.iter_lines())
+
+    def test_passes_status_code_to_django_response(self):
+        self.assertEqual(
+            self.django_response.status_code,
+            self.upstream_response_stub.status_code
+        )
+
+
+class NonStreamingProxyResponseGeneration(TestCase):
+    def setUp(self):
+        self.upstream_response_stub = Mock(content='some content')
+
+        self.proxy_response = ProxyResponse(
+            response=self.upstream_response_stub, stream=False)
+        self.django_response = self.proxy_response.generate_django_response()
+
+    def test_generates_a_normal_django_response(self):
+        self.assertIsInstance(self.django_response, HttpResponse)
+
+    def test_appropriately_passes_content_to_django_response(self):
+        self.assertEqual(
+            self.django_response.content, self.upstream_response_stub.content)
+
+    def test_passes_status_code_to_django_response(self):
+        self.assertEqual(
+            self.django_response.status_code,
+            self.upstream_response_stub.status_code
+        )
