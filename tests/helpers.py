@@ -1,4 +1,28 @@
 from mock import patch
+from mock import patch, Mock
+
+
+def generate_upstream_response_stub(**kwargs):
+    """Return a requests response object mock with reasonable default attrs.
+
+    Keyword arguments will be passed to Mock, allowing the default attributes
+    to be overridden at will.
+
+    """
+    kwargs['headers'] = kwargs.get('headers', {
+        'Fake-Header': '123',
+        'Content-Encoding': 'gzip'
+    })
+    kwargs['content'] = kwargs.get('content', 'upstream content')
+    kwargs['status_code'] = kwargs.get('status_code', 200)
+
+    response = Mock(**kwargs)
+
+    # in request response objects, response content is also accessible via
+    # the method iter_lines which always returns an iterable
+    response.iter_lines.return_value = [kwargs['content']]
+
+    return response
 
 
 class RequestPatchMixin(object):

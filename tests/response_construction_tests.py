@@ -3,21 +3,19 @@ from django.test.client import RequestFactory
 from mock import MagicMock, Mock, call
 from unittest2 import TestCase
 
-from helpers import RequestPatchMixin, ResponsePatchMixin
+
+from helpers import (
+    generate_upstream_response_stub, RequestPatchMixin, ResponsePatchMixin)
 from test_views import TestProxy
 
 
-class ResponseConstructionTest(TestCase, RequestPatchMixin,
-                               ResponsePatchMixin):
+class ResponseConstructionTest(
+        TestCase, RequestPatchMixin, ResponsePatchMixin):
     def setUp(self):
         self.proxy = TestProxy.as_view()
         self.browser_request = RequestFactory().get('/')
 
-        self.proxy_stub = Mock(
-            content='upstream content', headers={
-                'Fake-Header': '123',
-                'Content-Encoding': 'gzip'
-            }, status_code=200)
+        self.proxy_stub = generate_upstream_response_stub()
         self.patch_request(self.proxy_stub)
         self.patch_response(MagicMock())
 

@@ -1,8 +1,8 @@
 from django.test.client import RequestFactory
-from mock import ANY, Mock
+from mock import ANY
 from unittest2 import TestCase
 
-from helpers import RequestPatchMixin
+from helpers import generate_upstream_response_stub, RequestPatchMixin
 from test_views import TestProxy, UnverifiedSSLProxy
 
 
@@ -15,9 +15,7 @@ class HttpProxyConfigVerification(TestCase, RequestPatchMixin):
         self.orig_upstream_headers = TestProxy.ignored_upstream_headers
         self.orig_request_headers = TestProxy.ignored_request_headers
 
-        # Keep things fast by making sure that proxying doesn't actually
-        # happen in these tests:
-        self.patch_request(Mock(raw='', status_code=200, headers={}))
+        self.patch_request(generate_upstream_response_stub())
 
     def tearDown(self):
         self.stop_patching_request()
@@ -49,7 +47,7 @@ class HttpProxyUrlConstructionWithoutURLKwarg(TestCase, RequestPatchMixin):
         self.fake_request = RequestFactory().get('/yay/')
         self.proxy = TestProxy.as_view()
 
-        self.patch_request(Mock(raw='', status_code=200, headers={}))
+        self.patch_request(generate_upstream_response_stub())
 
         self.proxy(self.fake_request)
 
@@ -69,7 +67,7 @@ class HttpProxyUrlConstructionWithURLKwarg(TestCase, RequestPatchMixin):
         self.fake_request = RequestFactory().get('/yay/')
         self.proxy = TestProxy.as_view()
 
-        self.patch_request(Mock(raw='', status_code=200, headers={}))
+        self.patch_request(generate_upstream_response_stub())
 
         self.proxy(self.fake_request, url='yay/')
 
@@ -90,7 +88,7 @@ class HttpProxyUrlConstructionWithQueryStringPassingEnabled(
         self.fake_request = RequestFactory().get('/yay/?yay=foo,bar')
         self.proxy = TestProxy.as_view()
 
-        self.patch_request(Mock(raw='', status_code=200, headers={}))
+        self.patch_request(generate_upstream_response_stub())
 
         self.proxy(self.fake_request, url='yay/')
 
@@ -111,7 +109,7 @@ class HttpProxyUrlConstructionWithoutQueryStringPassingEnabled(
         self.fake_request = RequestFactory().get('/yay/?yay=foo,bar')
         self.proxy = TestProxy.as_view()
 
-        self.patch_request(Mock(raw='', status_code=200, headers={}))
+        self.patch_request(generate_upstream_response_stub())
 
         self.proxy(self.fake_request, url='yay/')
 
@@ -131,7 +129,7 @@ class HttpProxyFetchingWithVerifySSL(TestCase, RequestPatchMixin):
         self.fake_request = RequestFactory().get('/')
         self.proxy = TestProxy.as_view()
 
-        self.patch_request(Mock(raw='', status_code=200, headers={}))
+        self.patch_request(generate_upstream_response_stub())
 
         self.proxy(self.fake_request, url='yay/')
 
@@ -150,7 +148,7 @@ class HttpProxyFetchingWithoutVerifySSL(TestCase, RequestPatchMixin):
         self.fake_request = RequestFactory().get('/')
         self.proxy = UnverifiedSSLProxy.as_view()
 
-        self.patch_request(Mock(raw='', status_code=200, headers={}))
+        self.patch_request(generate_upstream_response_stub())
 
         self.proxy(self.fake_request, url='yay/')
 
