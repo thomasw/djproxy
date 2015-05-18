@@ -10,16 +10,13 @@ djproxy is a class-based generic view reverse HTTP proxy for Django.
 ## Why?
 
 If your application depends on a proxy (to get around Same Origin Policy issues
-in JavaScript, perhaps), djproxy can be used during development to provide that
-functionality.
+in JavaScript, perhaps), djproxy can be used during local development to provide
+that functionality.
 
-djproxy is not intended to be used in production, but should suffice for
-development. Use your web server's proxy capabilities in the wild. If you need
-to use this in production for some reason, it should be sufficiently performant
-as long as the upstream responses aren't large. Performance can be further
-increased by aggressively caching upstream responses.
-
-Note that djproxy doesn't currently support websockets.
+Using your web server's proxy capabilities in production should be preferred.
+However, if you need to use this in production, it should be sufficiently
+performant if configured correctly. Performance can be further imporved by
+aggressively caching upstream responses.
 
 ## Installation
 
@@ -55,8 +52,7 @@ urlpatterns = patterns(
 
 ### HttpProxy configuration:
 
-* `base_url`: The proxy url is formed by
-   `urlparse.urljoin(base_url, url_kwarg)`
+* `base_url`: The proxy url is formed by `urlparse.urljoin(base_url, url_kwarg)`
 * `ignored_upstream_headers`: A list of headers that shouldn't be forwarded
   to the browser from the proxied endpoint.
 * `ignored_request_headers`: A list of headers that shouldn't be forwarded
@@ -70,6 +66,27 @@ urlpatterns = patterns(
 * `verify_ssl`: This option corresponds to [requests' verify parameter][1]. It
   may be either a boolean, which toggles SSL certificate verification on or off,
   or the path to a CA_BUNDLE file for private certificates.
+* `stream`: A boolean indicating whether or not the upstream response should
+  be streamed to the browser. See Streaming vs Non-streaming Proxies for more
+  information.
+
+## Streaming vs Non-streaming Proxies
+
+By default, djproxy streams the upstream response downstream. This minimizes
+"wait time" (how long downstream must wait for the first chunks of response
+data) and prevents needing to load the entire upstream response into memory.
+Streaming is the optimal strategy for large responses and the required
+strategy for responses that never terminate (such as Twitter's streaming APIs).
+
+These advantages come at a cost, however. With non-streaming proxies,
+modifying upstream content using a proxy middleware is straightforward: The
+`process_response` method is passed a Django `HttpResponse` object as the
+`response` keyword argument. Modifying the content is as simple as changing
+`response.content`. With streaming proxies, `process_response` is passed a
+Django `StreamingHttpResponse` object, which has no `content` attribute. Care
+must be taken not to inadvertently load the entire response into memory.
+Modification can only happen line by line. Streaming proxies also suffer from
+the same [Django limitations as streaming responses][streaming]
 
 ## Adjusting location headers (ProxyPassReverse)
 
@@ -158,15 +175,16 @@ ProxyPass /service_prefix/ http://service.com/
 ProxyPassReverse /service_prefix/ http://service.com/
 ```
 
-`verify_ssl`  and `csrf_exempt` are optional (and default to True), but
-base_url and prefix are required.
+`base_url` and `prefix` are required. All other configuration values are
+optional.
 
-`middleware` and `append_middleware` are also optional. If neither are present,
-the default proxy middleware set will be used. If middleware is specified,
-then the default proxy middleware list will be replaced. If
-append_middleware is specified, the list will be appended to the end of
-the middleware set. Use `append_middleware` if you want to add additional
-proxy behaviors without modifying the default behaviors.
+Default values:
+
+verify_ssl - True
+csrf_exempt - True
+stream - True
+middleware - HttpProxy list of default middleware
+append_middleware - [] (used to add additional middleware to `middleware`)
 
 ## Proxy middleware
 
@@ -208,6 +226,14 @@ project:
 
 **downstream**: The agent that initiated the request to djproxy.
 
+## WebSockets
+
+The WSGI protocol and Django do not support WebSockets. Unfortunately, this
+limitation means that djproxy cannot natively support proxying WebSockets.
+There are projects, such as django-websocket-redis, which aim to add WebSocket
+support to django. It may be possible to achieve a WebSocket proxy using such a
+library but, sadly, this outside the scope of this project.
+
 ## Contributing
 
 To run the tests, first install the dependencies:
@@ -242,3 +268,4 @@ information.
 
 [1]:http://docs.python-requests.org/en/latest/user/advanced/?highlight=verify#ssl-cert-verification
 [2]:https://github.com/thomasw/djproxy/blob/master/djproxy/proxy_middleware.py#L32
+[streaming]:https://docs.djangoproject.com/en/1.8/ref/request-response/#streaminghttpresponse-objects
