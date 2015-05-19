@@ -1,13 +1,15 @@
-from django.http import HttpResponse, StreamingHttpResponse
+import django
 from django.test.client import RequestFactory
 from mock import ANY, MagicMock, Mock, call
-from unittest2 import TestCase
+from unittest2 import TestCase, skipIf
 
 from djproxy.response import ProxyResponse
 
 from helpers import (
     generate_upstream_response_stub, RequestPatchMixin, ResponsePatchMixin)
 from test_views import TestProxy
+
+DJANGO_VERSION = django.get_version()
 
 
 class ResponseConstructionTest(
@@ -45,17 +47,20 @@ class HttpProxyHeaderPassThrough(ResponseConstructionTest):
             self.response_stub.__setitem__.mock_calls)
 
 
+@skipIf(
+    DJANGO_VERSION < (1, 5), "requires Django >= 1.5 for streaming proxies")
 class StreamingProxyResponseGeneration(TestCase):
     def setUp(self):
         self.upstream_response_stub = Mock()
         self.upstream_response_stub.iter_lines.return_value = ['some content']
+        self.response_class = django.http.StreamingHttpResponse
 
         self.proxy_response = ProxyResponse(
             response=self.upstream_response_stub, stream=True)
         self.django_response = self.proxy_response.generate_django_response()
 
     def test_generates_a_streaming_django_response(self):
-        self.assertIsInstance(self.django_response, StreamingHttpResponse)
+        self.assertIsInstance(self.django_response, self.response_class)
 
     def test_appropriately_passes_streaming_content_to_django_response(self):
         self.assertEqual(
@@ -72,13 +77,14 @@ class StreamingProxyResponseGeneration(TestCase):
 class NonStreamingProxyResponseGeneration(TestCase):
     def setUp(self):
         self.upstream_response_stub = Mock(content='some content')
+        self.response_class = django.http.HttpResponse
 
         self.proxy_response = ProxyResponse(
             response=self.upstream_response_stub, stream=False)
         self.django_response = self.proxy_response.generate_django_response()
 
     def test_generates_a_normal_django_response(self):
-        self.assertIsInstance(self.django_response, HttpResponse)
+        self.assertIsInstance(self.django_response, self.response_class)
 
     def test_appropriately_passes_content_to_django_response(self):
         self.assertEqual(
