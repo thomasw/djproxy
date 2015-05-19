@@ -14,4 +14,4 @@ install:
 script:
     - nosetests --with-coverage --cover-package=djproxy
 after_success:
-  - coveralls
+    - coveralls
