@@ -9,8 +9,6 @@ from helpers import (
     generate_upstream_response_stub, RequestPatchMixin, ResponsePatchMixin)
 from test_views import TestProxy
 
-DJANGO_VERSION = django.get_version()
-
 
 class ResponseConstructionTest(
         TestCase, RequestPatchMixin, ResponsePatchMixin):
@@ -48,7 +46,7 @@ class HttpProxyHeaderPassThrough(ResponseConstructionTest):
 
 
 @skipIf(
-    DJANGO_VERSION < (1, 5), "requires Django >= 1.5 for streaming proxies")
+    django.VERSION < (1, 5), "requires Django >= 1.5 for streaming proxies")
 class StreamingProxyResponseGeneration(TestCase):
     def setUp(self):
         self.upstream_response_stub = Mock()
@@ -74,8 +72,7 @@ class StreamingProxyResponseGeneration(TestCase):
         )
 
 
-@skipIf(
-    DJANGO_VERSION >= (1, 5), "condition won't exist in Django >= 1.5")
+@skipIf(django.VERSION >= (1, 5), "condition won't exist in Django >= 1.5")
 class StreamingProxyResponseGenerationInOldDjango(TestCase):
     def test_raises_not_implemented_error(self):
         self.assertRaises(
