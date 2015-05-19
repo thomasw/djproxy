@@ -8,7 +8,7 @@ from djproxy.views import HttpProxy
 
 def generate_proxy(
         prefix, base_url, verify_ssl=True, middleware=None,
-        append_middleware=None, stream=True, **kwargs):
+        append_middleware=None, stream=False, **kwargs):
     """Generate an HttpProxy based vie and set the passed params as attrs."""
     middleware = list(middleware or HttpProxy.proxy_middleware)
     middleware += list(append_middleware or [])
@@ -33,7 +33,7 @@ def generate_routes(config):
             'csrf_exempt: False',
             'middleware': ['djproxy.proxy_middleware.AddXFF'],
             'append_middleware': ['djproxy.proxy_middleware.AddXFF'],
-            'stream': True
+            'stream': False
         }
     })
 
@@ -44,7 +44,7 @@ def generate_routes(config):
 
     verify_ssl - True
     csrf_exempt - True
-    stream - True
+    stream - False
     middleware - HttpProxy default middleware
     append_middleware - [] (used to add additional middleware to the default)
 

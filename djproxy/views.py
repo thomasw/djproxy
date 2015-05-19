@@ -30,7 +30,7 @@ class HttpProxy(View):
     pass_query_string = True
     reverse_urls = []
     verify_ssl = True
-    stream = True
+    stream = False
 
     def __init__(self, *args, **kwargs):
         return super(View, self).__init__(*args, **kwargs)

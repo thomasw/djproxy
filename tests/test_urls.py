@@ -11,12 +11,12 @@ urlpatterns = patterns(
 ) + generate_routes({
     'service_one': {
         'base_url': 'https://www.yahoo.com/',
-        'prefix': '/yahoo/'
+        'prefix': '/yahoo/',
+        'stream': True
     },
     'service_two': {
         'base_url': 'https://www.google.com/',
         'prefix': '/google/',
-        'stream': False
     },
     'service_three': {
         'base_url': 'http://big.faker/',
@@ -25,11 +25,11 @@ urlpatterns = patterns(
     },
     'service_four': {
         'base_url': 'https://stream.twitter.com/',
-        'prefix': '/twitter/'
+        'prefix': '/twitter/',
+        'stream': True
     },
     'service_five': {
         'base_url': 'https://www.yahoo.com/',
-        'prefix': '/yahoo-nostream/',
-        'stream': False
+        'prefix': '/yahoo-nostream/'
     },
 })
