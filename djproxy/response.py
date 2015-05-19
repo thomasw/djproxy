@@ -1,5 +1,14 @@
 """Django response object generators."""
-from django.http import HttpResponse, StreamingHttpResponse
+from django.http import HttpResponse
+
+
+SUPPORTS_STREAMING = True
+
+try:
+    from django.http import StreamingHttpResponse
+except ImportError:
+    StreamingHttpResponse = None
+    SUPPORTS_STREAMING = False
 
 
 class ProxyResponse(object):
@@ -23,10 +32,15 @@ class ProxyResponse(object):
 
     """
 
-    def __init__(self, response, stream=True):
+    def __init__(self, response, stream=False):
         """Return a ProxyResponse given a requests response and stream flag."""
         self.response = response
         self.stream = stream
+
+        if not SUPPORTS_STREAMING and self.stream:
+            raise NotImplementedError(
+                "Your current Django version doesn't support streaming "
+                "responses. Streaming proxies are not possible.")
 
     @property
     def _response_class(self):

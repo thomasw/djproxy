@@ -74,6 +74,14 @@ class StreamingProxyResponseGeneration(TestCase):
         )
 
 
+@skipIf(
+    DJANGO_VERSION >= (1, 5), "condition won't exist in Django >= 1.5")
+class StreamingProxyResponseGenerationInOldDjango(TestCase):
+    def test_raises_not_implemented_error(self):
+        self.assertRaises(
+            NotImplementedError, ProxyResponse, response=Mock(), stream=True)
+
+
 class NonStreamingProxyResponseGeneration(TestCase):
     def setUp(self):
         self.upstream_response_stub = Mock(content='some content')
