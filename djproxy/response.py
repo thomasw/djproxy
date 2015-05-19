@@ -39,8 +39,9 @@ class ProxyResponse(object):
 
         if not SUPPORTS_STREAMING and self.stream:
             raise NotImplementedError(
-                "Your current Django version doesn't support streaming "
-                "responses. Streaming proxies are not possible.")
+                "The installed Django version doesn't support streaming "
+                "responses. Streaming proxies are not possible. Set "
+                "stream=False on your proxy view.")
 
     @property
     def _response_class(self):
