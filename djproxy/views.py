@@ -53,6 +53,8 @@ class HttpProxy(View):
     def dispatch(self, request, *args, **kwargs):
         """Dispatch all HTTP methods to the proxy."""
         self.request = DownstreamRequest(request)
+        self.args = args
+        self.kwargs = kwargs
 
         self._verify_config()
 
