@@ -12,8 +12,8 @@ env:
 matrix:
     exclude:
         - python: 2.6
-          env: DJANGO_VERSION=1.6.11
           env: DJANGO_VERSION=1.7.8
+        - python: 2.6
           env: DJANGO_VERSION=1.8.1
 install:
     - pip install -r requirements.txt --use-mirrors
