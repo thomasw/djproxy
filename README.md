@@ -15,7 +15,7 @@ that functionality.
 
 Using your web server's proxy capabilities in production should be preferred.
 However, if you need to use this in production, it should be sufficiently
-performant if configured correctly. Performance can be further imporved by
+performant if configured correctly. Performance can be further improved by
 aggressively caching upstream responses.
 
 ## Installation
@@ -25,6 +25,9 @@ pip install djproxy
 ```
 
 djproxy requires requests >= 1.0.0 and django >= 1.4.0.
+
+Streaming proxies are only supported in django >= 1.5 (the first version of
+Django to support streaming responses).
 
 ## Usage
 
@@ -72,21 +75,26 @@ urlpatterns = patterns(
 
 ## Streaming vs Non-streaming Proxies
 
-By default, djproxy streams the upstream response downstream. This minimizes
+By default, djproxy buffers upstream responses in memory before sending them
+downstream. This is the behavior most consistent and compatible with Django.
+
+Djproxy can also stream upstream responses to downstream. This minimizes
 "wait time" (how long downstream must wait for the first chunks of response
 data) and prevents needing to load the entire upstream response into memory.
-Streaming is the optimal strategy for large responses and the required
+Streaming is the optimal strategy for large responses (images) and the required
 strategy for responses that never terminate (such as Twitter's streaming APIs).
 
-These advantages come at a cost, however. With non-streaming proxies,
-modifying upstream content using a proxy middleware is straightforward: The
-`process_response` method is passed a Django `HttpResponse` object as the
-`response` keyword argument. Modifying the content is as simple as changing
-`response.content`. With streaming proxies, `process_response` is passed a
-Django `StreamingHttpResponse` object, which has no `content` attribute. Care
+These advantages come at a cost. With non-streaming proxies, modifying upstream
+content using a proxy middleware is straightforward: The `process_response`
+method is passed a Django `HttpResponse` object as the `response` keyword
+argument. Modifying the content is as simple as changing `response.content`.
+With streaming proxies, `process_response` is passed a Django
+`StreamingHttpResponse` object, which has no `content` attribute. Care
 must be taken not to inadvertently load the entire response into memory.
 Modification can only happen line by line. Streaming proxies also suffer from
 the same [Django limitations as streaming responses][streaming]
+
+**Note that streaming proxies are not supported in Django 1.4.**
 
 ## Adjusting location headers (ProxyPassReverse)
 
@@ -182,7 +190,7 @@ Default values:
 
 verify_ssl - True
 csrf_exempt - True
-stream - True
+stream - False
 middleware - HttpProxy list of default middleware
 append_middleware - [] (used to add additional middleware to `middleware`)
 
