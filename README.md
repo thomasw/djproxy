@@ -244,16 +244,27 @@ library but, sadly, this outside the scope of this project.
 
 ## Contributing
 
-To run the tests, first install the dependencies:
+First, install the required development dependencies:
 
 ```
 pip install -r requirements.txt
 ```
 
-If you'd like to test this against a version of Django other than 1.5, wipe out
-the 1.5 installation from `requirements.txt` by installing the desired version.
+If you'd like to test djproxy against a version of Django other than what is
+installed by requirements.txt, simply pip install the desired version.
 
-Run `nosetests` to execute the test suite.
+Execute the following to run the test suite:
+
+```
+nosetests
+```
+
+Integration tests are not run by default for performance reasons. To run them,
+execute the following:
+
+```
+nosetests integration_tests
+```
 
 To automatically run the test suite, flake8, frosted, and pep257 checks whenever
 python files change use testtube by executing `stir` in the top level djproxy
