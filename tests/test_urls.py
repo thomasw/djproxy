@@ -6,7 +6,8 @@ from test_views import index, LocalProxy
 
 urlpatterns = patterns(
     '',
-    url(r'^some/content/.*$', index, name='index'),
+    url(r'^$', index, name='index'),
+    url(r'^some/content/.*$', index, name='some_content'),
     url(r'^local_proxy/(?P<url>.*)$', LocalProxy.as_view(), name='proxy'),
 ) + generate_routes({
     'service_one': {
@@ -31,5 +32,14 @@ urlpatterns = patterns(
     'service_five': {
         'base_url': 'https://www.yahoo.com/',
         'prefix': '/yahoo-nostream/'
+    },
+    'httpbin': {
+        'base_url': 'http://httpbin.org/',
+        'prefix': '/httpbin/'
+    },
+    'httpbin-stream': {
+        'base_url': 'http://httpbin.org/',
+        'prefix': '/httpbin-stream/',
+        'stream': True
     },
 })

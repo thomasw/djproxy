@@ -20,5 +20,6 @@ install:
     - pip install Django==$DJANGO_VERSION
 script:
     - nosetests --with-coverage --cover-package=djproxy
+    - nosetests integration_tests
 after_success:
     - coveralls
