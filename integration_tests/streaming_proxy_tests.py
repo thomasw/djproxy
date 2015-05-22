@@ -1,9 +1,13 @@
 import json
 from urlparse import urljoin
 
+import django
 from django.test import LiveServerTestCase
+from unittest2 import skipIf
 
 
+@skipIf(
+    django.VERSION < (1, 5), "requires Django >= 1.5 for streaming proxies")
 class StreamHttpProxyingGoodRequests(LiveServerTestCase):
     def setUp(self):
         self.url = urljoin(self.live_server_url, '/httpbin-stream/get?foo=bar')
@@ -18,6 +22,8 @@ class StreamHttpProxyingGoodRequests(LiveServerTestCase):
         self.assertEqual(self.response.json_content['args']['foo'], 'bar')
 
 
+@skipIf(
+    django.VERSION < (1, 5), "requires Django >= 1.5 for streaming proxies")
 class StreamHttpProxyingBadRequests(LiveServerTestCase):
     def setUp(self):
         self.url = urljoin(self.live_server_url, '/httpbin-stream/status/412')
