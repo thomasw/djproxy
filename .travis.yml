@@ -19,7 +19,6 @@ install:
     - pip install -r requirements.txt --use-mirrors
     - pip install Django==$DJANGO_VERSION
 script:
-    - nosetests --with-coverage --cover-package=djproxy
-    - nosetests integration_tests
+    - nosetests tests integration_tests --with-coverage --cover-package=djproxy
 after_success:
     - coveralls
