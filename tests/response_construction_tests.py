@@ -24,10 +24,6 @@ class ResponseConstructionTest(
 
         self.proxy(self.browser_request)
 
-    def tearDown(self):
-        self.stop_patching_request()
-        self.stop_patching_response()
-
 
 class HttpProxyContentPassThrough(ResponseConstructionTest):
     def test_creates_response_object_with_proxied_content(self):

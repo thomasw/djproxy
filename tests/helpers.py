@@ -32,10 +32,9 @@ class RequestPatchMixin(object):
 
         self.request.return_value = mock_proxy_response
 
-        return self.request
+        self.addCleanup(self.request_patcher.stop)
 
-    def stop_patching_request(self):
-        self.request_patcher.stop()
+        return self.request
 
 
 class ResponsePatchMixin(object):
@@ -47,5 +46,4 @@ class ResponsePatchMixin(object):
         proxy_response_obj = self.response_mock.return_value
         proxy_response_obj.generate_django_response.return_value = stub
 
-    def stop_patching_response(self):
-        self.response_patcher.stop()
+        self.addCleanup(self.response_patcher.stop)

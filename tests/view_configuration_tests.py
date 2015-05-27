@@ -18,8 +18,6 @@ class HttpProxyConfigVerification(TestCase, RequestPatchMixin):
         self.patch_request(generate_upstream_response_stub())
 
     def tearDown(self):
-        self.stop_patching_request()
-
         TestProxy.base_url = self.orig_base_url
         TestProxy.ignored_upstream_headers = self.orig_upstream_headers
         TestProxy.ignored_request_headers = self.orig_request_headers
@@ -51,9 +49,6 @@ class HttpProxyUrlConstructionWithoutURLKwarg(TestCase, RequestPatchMixin):
 
         self.proxy(self.fake_request)
 
-    def tearDown(self):
-        self.stop_patching_request()
-
     def test_only_contains_base_url_if_no_default_url_configured(self):
         """only contains base_url"""
         self.request.assert_called_once_with(
@@ -70,9 +65,6 @@ class HttpProxyUrlConstructionWithURLKwarg(TestCase, RequestPatchMixin):
         self.patch_request(generate_upstream_response_stub())
 
         self.proxy(self.fake_request, url='yay/')
-
-    def tearDown(self):
-        self.stop_patching_request()
 
     def test_urljoins_base_url_and_url_kwarg(self):
         """urljoins base_url and url kwarg"""
@@ -91,9 +83,6 @@ class HttpProxyUrlConstructionWithQueryStringPassingEnabled(
         self.patch_request(generate_upstream_response_stub())
 
         self.proxy(self.fake_request, url='yay/')
-
-    def tearDown(self):
-        self.stop_patching_request()
 
     def test_sends_query_string_to_proxied_endpoint(self):
         self.request.assert_called_once_with(
@@ -114,7 +103,6 @@ class HttpProxyUrlConstructionWithoutQueryStringPassingEnabled(
         self.proxy(self.fake_request, url='yay/')
 
     def tearDown(self):
-        self.stop_patching_request()
         TestProxy.pass_query_string = True
 
     def test_doesnt_sends_query_string_to_proxied_endpoint(self):
@@ -133,9 +121,6 @@ class HttpProxyFetchingWithVerifySSL(TestCase, RequestPatchMixin):
 
         self.proxy(self.fake_request, url='yay/')
 
-    def tearDown(self):
-        self.stop_patching_request()
-
     def test_tells_requests_to_verify_the_SSL_certs(self):
         self.request.assert_called_once_with(
             method=ANY, url=ANY, data=ANY, headers=ANY, params=ANY,
@@ -151,9 +136,6 @@ class HttpProxyFetchingWithoutVerifySSL(TestCase, RequestPatchMixin):
         self.patch_request(generate_upstream_response_stub())
 
         self.proxy(self.fake_request, url='yay/')
-
-    def tearDown(self):
-        self.stop_patching_request()
 
     def test_tells_requests_not_to_verify_the_ssl_certs(self):
         self.request.assert_called_once_with(
