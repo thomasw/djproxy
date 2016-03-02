@@ -20,7 +20,7 @@ class HttpProxyHeaderPassThrough(TestCase, RequestPatchMixin):
         self.browser_request.META['HTTP_UNNORMALIZED_HEADER'] = 'header value'
         self.browser_request.META['CONTENT_TYPE'] = 'header value'
 
-        self.patch_request(Mock(headers={'Fake-Header': '123'}))
+        self.request = self.patch_request(Mock(headers={'Fake-Header': '123'}))
 
         self.proxy(self.browser_request)
 
