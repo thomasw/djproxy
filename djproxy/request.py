@@ -4,7 +4,6 @@ from .headers import HeaderDict
 
 
 class DownstreamRequest(object):
-
     """A Django request wrapper that provides utilities for proxies.
 
     Attributes that do not exist on this class are deferred to the Django
@@ -43,5 +42,5 @@ class DownstreamRequest(object):
         """Proxy the Django request object for missing attributes."""
         try:
             return self.__getattribute__(name)
-        except:
+        except AttributeError:
             return getattr(self._request, name)
