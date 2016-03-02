@@ -41,4 +41,7 @@ class DownstreamRequest(object):
 
     def __getattr__(self, name):
         """Proxy the Django request object for missing attributes."""
-        return getattr(self._request, name)
+        try:
+            return self.__getattribute__(name)
+        except:
+            return getattr(self._request, name)
