@@ -2,8 +2,8 @@ from django.test.client import RequestFactory
 from mock import ANY, Mock
 from unittest2 import TestCase
 
-from helpers import RequestPatchMixin
-from test_views import TestProxy, UnverifiedSSLProxy
+from .helpers import RequestPatchMixin
+from .test_views import TestProxy, UnverifiedSSLProxy
 
 
 class HttpProxyConfigVerification(TestCase, RequestPatchMixin):

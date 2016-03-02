@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url
 
 from djproxy.urls import generate_routes
-from test_views import LocalProxy, index
+from .test_views import LocalProxy, index
 
 
 urlpatterns = patterns(

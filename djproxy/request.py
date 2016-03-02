@@ -1,6 +1,6 @@
 """Utlities for making Django request objects more useful."""
 
-from headers import HeaderDict
+from .headers import HeaderDict
 
 
 class DownstreamRequest(object):

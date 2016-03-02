@@ -2,8 +2,8 @@ from django.test.client import RequestFactory
 from mock import Mock
 from unittest2 import TestCase
 
-from helpers import RequestPatchMixin
-from test_views import TestProxy
+from .helpers import RequestPatchMixin
+from .test_views import TestProxy
 
 
 class HttpProxyHeaderPassThrough(TestCase, RequestPatchMixin):

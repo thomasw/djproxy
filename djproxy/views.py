@@ -5,9 +5,9 @@ from django.http import HttpResponse
 from django.views.generic import View
 from requests import request
 
-from headers import HeaderDict
-from proxy_middleware import MiddlewareSet
-from request import DownstreamRequest
+from .headers import HeaderDict
+from .proxy_middleware import MiddlewareSet
+from .request import DownstreamRequest
 
 
 class HttpProxy(View):
