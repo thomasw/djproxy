@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url
 
 from djproxy.urls import generate_routes
-from test_views import LocalProxy, index
+from .test_views import LocalProxy, index
 
 
 urlpatterns = patterns(
@@ -10,7 +10,7 @@ urlpatterns = patterns(
     url(r'^local_proxy/(?P<url>.*)$', LocalProxy.as_view(), name='proxy')
 ) + generate_routes({
     'service_one': {
-        'base_url': 'https://yahoo.com/',
+        'base_url': 'https://www.yahoo.com/',
         'prefix': '/yahoo/'
     },
     'service_two': {

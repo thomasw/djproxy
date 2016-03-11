@@ -1,5 +1,8 @@
 # Changelog
 
+## Dev
+* Add python 3 support.
+
 ## 2.1.0
 * Adds a middleware that sends an X-Forwarded-Proto header to upstream endpoints
   based on whether or not the incoming connection is https or http.

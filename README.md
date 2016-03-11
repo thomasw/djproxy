@@ -27,7 +27,7 @@ Note that djproxy doesn't currently support websockets.
 pip install djproxy
 ```
 
-djproxy requires requests >= 1.0.0 and django >= 1.4.0.
+djproxy requires requests >= 1.0.0, django >= 1.4.0 and python >= 2.6.
 
 ## Usage
 
@@ -210,14 +210,15 @@ project:
 
 ## Contributing
 
-To run the tests, first install the dependencies:
+To run the tests, first install development dependencies:
 
 ```
 pip install -r requirements.txt
 ```
 
-If you'd like to test this against a version of Django other than 1.5, wipe out
-the 1.5 installation from `requirements.txt` by installing the desired version.
+If you'd like to test this against a version of Django other than the latest
+supported on your Python version, wipe out the `requirements.txt` installation
+by pip installing your desired version.
 
 Run `nosetests` to execute the test suite.
 

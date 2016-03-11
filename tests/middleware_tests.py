@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.test.client import RequestFactory
 from mock import Mock
 from unittest2 import TestCase
+from six import iteritems
 
 from djproxy.proxy_middleware import AddXFF, AddXFH, AddXFP, ProxyPassReverse
 from djproxy.request import DownstreamRequest
@@ -68,7 +69,7 @@ class ProxyPassReverseTest(TestCase):
 
         # By default, the response objects headers will match the upstream
         # response object's headers.
-        for key, value in self.upstream_response.iteritems():
+        for key, value in iteritems(self.upstream_response):
             self.response[key] = value
 
         self.proxy_response = self.middleware.process_response(

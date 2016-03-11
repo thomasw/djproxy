@@ -1,10 +1,9 @@
 """Utlities for making Django request objects more useful."""
 
-from headers import HeaderDict
+from .headers import HeaderDict
 
 
 class DownstreamRequest(object):
-
     """A Django request wrapper that provides utilities for proxies.
 
     Attributes that do not exist on this class are deferred to the Django
@@ -41,4 +40,7 @@ class DownstreamRequest(object):
 
     def __getattr__(self, name):
         """Proxy the Django request object for missing attributes."""
-        return getattr(self._request, name)
+        try:
+            return self.__getattribute__(name)
+        except AttributeError:
+            return getattr(self._request, name)

@@ -1,6 +1,6 @@
 import re
 
-from util import import_string
+from .util import import_string
 
 
 class MiddlewareSet(object):

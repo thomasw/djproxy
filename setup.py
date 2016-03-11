@@ -11,10 +11,10 @@ try:
 except ImportError:
     pass
 
-install_requires = ['requests>=1.0.0', 'django>=1.4']
+install_requires = ['requests>=1.0.0', 'django>=1.4', 'six>=1.4.0']
 tests_require = [
-    'mock==1.0.1', 'nose==1.3.0', 'unittest2==0.5.1', 'requests>=1.0.0',
-    'django>=1.4']
+    'mock==1.3.0', 'nose==1.3.7', 'unittest2==1.1.0', 'spec==1.3.1',
+    'requests>=1.0.0', 'django>=1.4']
 
 # Django >= 1.7 is not 2.6 compatible
 if sys.version_info[:2] < (2, 7):

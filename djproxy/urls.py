@@ -1,6 +1,7 @@
 import re
 
 from django.conf.urls import patterns, url
+from six import iteritems
 
 from djproxy.views import HttpProxy
 
@@ -53,7 +54,7 @@ def generate_routes(config):
     """
     routes = []
 
-    for name, config in config.iteritems():
+    for name, config in iteritems(config):
         pattern = r'^%s(?P<url>.*)$' % re.escape(config['prefix'].lstrip('/'))
         proxy = generate_proxy(
             prefix=config['prefix'], base_url=config['base_url'],

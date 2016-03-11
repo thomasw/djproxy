@@ -2,8 +2,8 @@ from django.test.client import RequestFactory
 from mock import ANY, Mock
 from unittest2 import TestCase
 
-from helpers import RequestPatchMixin
-from test_views import TestProxy, UnverifiedSSLProxy
+from .helpers import RequestPatchMixin
+from .test_views import TestProxy, UnverifiedSSLProxy
 
 
 class HttpProxyConfigVerification(TestCase, RequestPatchMixin):
@@ -20,8 +20,6 @@ class HttpProxyConfigVerification(TestCase, RequestPatchMixin):
         self.patch_request(Mock(raw='', status_code=200, headers={}))
 
     def tearDown(self):
-        self.stop_patching_request()
-
         TestProxy.base_url = self.orig_base_url
         TestProxy.ignored_upstream_headers = self.orig_upstream_headers
         TestProxy.ignored_request_headers = self.orig_request_headers
@@ -49,12 +47,10 @@ class HttpProxyUrlConstructionWithoutURLKwarg(TestCase, RequestPatchMixin):
         self.fake_request = RequestFactory().get('/yay/')
         self.proxy = TestProxy.as_view()
 
-        self.patch_request(Mock(raw='', status_code=200, headers={}))
+        self.request = self.patch_request(
+            Mock(raw='', status_code=200, headers={}))
 
         self.proxy(self.fake_request)
-
-    def tearDown(self):
-        self.stop_patching_request()
 
     def test_only_contains_base_url_if_no_default_url_configured(self):
         """only contains base_url"""
@@ -69,12 +65,10 @@ class HttpProxyUrlConstructionWithURLKwarg(TestCase, RequestPatchMixin):
         self.fake_request = RequestFactory().get('/yay/')
         self.proxy = TestProxy.as_view()
 
-        self.patch_request(Mock(raw='', status_code=200, headers={}))
+        self.request = self.patch_request(
+            Mock(raw='', status_code=200, headers={}))
 
         self.proxy(self.fake_request, url='yay/')
-
-    def tearDown(self):
-        self.stop_patching_request()
 
     def test_urljoins_base_url_and_url_kwarg(self):
         """urljoins base_url and url kwarg"""
@@ -90,12 +84,10 @@ class HttpProxyUrlConstructionWithQueryStringPassingEnabled(
         self.fake_request = RequestFactory().get('/yay/?yay=foo,bar')
         self.proxy = TestProxy.as_view()
 
-        self.patch_request(Mock(raw='', status_code=200, headers={}))
+        self.request = self.patch_request(
+            Mock(raw='', status_code=200, headers={}))
 
         self.proxy(self.fake_request, url='yay/')
-
-    def tearDown(self):
-        self.stop_patching_request()
 
     def test_sends_query_string_to_proxied_endpoint(self):
         self.request.assert_called_once_with(
@@ -111,12 +103,12 @@ class HttpProxyUrlConstructionWithoutQueryStringPassingEnabled(
         self.fake_request = RequestFactory().get('/yay/?yay=foo,bar')
         self.proxy = TestProxy.as_view()
 
-        self.patch_request(Mock(raw='', status_code=200, headers={}))
+        self.request = self.patch_request(
+            Mock(raw='', status_code=200, headers={}))
 
         self.proxy(self.fake_request, url='yay/')
 
     def tearDown(self):
-        self.stop_patching_request()
         TestProxy.pass_query_string = True
 
     def test_doesnt_sends_query_string_to_proxied_endpoint(self):
@@ -131,12 +123,10 @@ class HttpProxyFetchingWithVerifySSL(TestCase, RequestPatchMixin):
         self.fake_request = RequestFactory().get('/')
         self.proxy = TestProxy.as_view()
 
-        self.patch_request(Mock(raw='', status_code=200, headers={}))
+        self.request = self.patch_request(
+            Mock(raw='', status_code=200, headers={}))
 
         self.proxy(self.fake_request, url='yay/')
-
-    def tearDown(self):
-        self.stop_patching_request()
 
     def test_tells_requests_to_verify_the_SSL_certs(self):
         self.request.assert_called_once_with(
@@ -150,12 +140,10 @@ class HttpProxyFetchingWithoutVerifySSL(TestCase, RequestPatchMixin):
         self.fake_request = RequestFactory().get('/')
         self.proxy = UnverifiedSSLProxy.as_view()
 
-        self.patch_request(Mock(raw='', status_code=200, headers={}))
+        self.request = self.patch_request(
+            Mock(raw='', status_code=200, headers={}))
 
         self.proxy(self.fake_request, url='yay/')
-
-    def tearDown(self):
-        self.stop_patching_request()
 
     def test_tells_requests_not_to_verify_the_ssl_certs(self):
         self.request.assert_called_once_with(
