@@ -20,7 +20,6 @@ setup(
     name="djproxy",
     version=__version__,
     url='https://github.com/thomasw/djproxy',
-    download_url='https://github.com/thomasw/djproxy/releases',
     author=__author__,
     author_email='thomas.welfley+djproxy@gmail.com',
     description=__doc__,
