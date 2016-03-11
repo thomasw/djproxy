@@ -20,6 +20,17 @@ class UnverifiedSSLProxy(HttpProxy):
     verify_ssl = False
 
 
+class QuickTimeoutProxy(HttpProxy):
+    base_url = 'https://google.com/'
+    verify_ssl = False
+    timeout = (0.1, 0.1)
+
+
+class SpecifiedCertProxy(HttpProxy):
+    base_url = 'https://google.com/'
+    cert = ('cert.pem', 'key.pem')
+
+
 class ReverseProxy(HttpProxy):
     base_url = 'https://google.com/'
     reverse_urls = [
