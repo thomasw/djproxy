@@ -42,8 +42,8 @@ def generate_routes(config):
     the default proxy middleware set will be used. If middleware is specified,
     then the default proxy middleware list will be replaced. If
     append_middleware is specified, the list will be appended to the end of
-    the middleware set. Use append_middleware if you want to add additional
-    proxy behaviors without modifying the default behaviors.
+    the middleware set. Use append_middleware if adding additional proxy
+    behaviors without modifying the default behaviors is desired.
 
     Returns
 

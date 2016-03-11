@@ -10,16 +10,16 @@ djproxy is a class-based generic view reverse HTTP proxy for Django.
 
 ## Why?
 
-If your application depends on a proxy (to get around Same Origin Policy issues
+If an application depends on a proxy (to get around Same Origin Policy issues
 in JavaScript, perhaps), djproxy can be used to provide that functionality in
 a web server agnostic way. This allows developers to keep local development
 environments for proxy dependent applications fully functional without needing
 to run anything other than the django development server.
 
 djproxy is also suitable for use in production environments and has been proven
-to be performant in large scale deployments. However, your web server's proxy
-capabilities will be *more* performant in many cases. If you need to use this in
-production, it should be fine as long as upstream responses aren't large.
+to be performant in large scale deployments. However, a web server's proxy
+capabilities will be *more* performant in many cases. If one needs to use this
+in production, it should be fine as long as upstream responses aren't large.
 Performance can be further increased by aggressively caching upstream responses.
 
 Note that djproxy doesn't currently support websockets because django doesn't
@@ -45,7 +45,7 @@ class LocalProxy(HttpProxy):
     base_url = 'https://google.com/'
 ```
 
-Add a url pattern that points at your proxy view. The `url` kwarg will be
+Add a url pattern that points at the proxy view. The `url` kwarg will be
 urljoined with base_url:
 
 ```python
@@ -59,8 +59,10 @@ urlpatterns = patterns(
 
 Additional examples can be found here: [views][3], [urls][4].
 
-
 ### HttpProxy configuration:
+
+`HttpProxy` view's behavior can be further customized by overriding the
+following class attributes.
 
 * `base_url`: The proxy url is formed by
    `urlparse.urljoin(base_url, url_kwarg)`
@@ -74,9 +76,23 @@ Additional examples can be found here: [views][3], [urls][4].
   sent to the proxied endpoint.
 * `reverse_urls`: An iterable of location header replacements to be made on
   the constructed response (similar to Apache's `ProxyPassReverse` directive).
-* `verify_ssl`: This option corresponds to [requests' verify parameter][1]. It
-  may be either a boolean, which toggles SSL certificate verification on or off,
-  or the path to a CA_BUNDLE file for private certificates.
+* `verify_ssl`\*: This attribute corresponds to [requests' verify parameter][1].
+  It may be either a boolean, which toggles SSL certificate verification on or
+  off, or the path to a CA_BUNDLE file for private certificates.
+* `cert`\*: This attribute corresponds to [requests' cert parameter][1]. If a
+  string is specified, it will be treated as a path to an ssl client cert file
+  (.pem). If a tuple is specified, it will be treated as a ('cert', 'key')
+  pair.
+* `timeout`\*: This attribute corresponds to [requests' timeout parameter][5].
+  It is used to specify how long to wait for the upstream server to send data
+  before giving up. The value must be either a float representing the total
+  timeout time in seconds, or a (connect timeout float, read timeout float)
+  tuple.
+
+\* The behavior changes that result from configuring `verify_ssl`, `cert`, and
+`timeout` will ultimately be dependent on the specific version of requests
+that's installed. For example, in older versions of requests, tuple values are
+not supported for the `cert` and `timeout` properties.
 
 ## Adjusting location headers (ProxyPassReverse)
 
@@ -117,8 +133,8 @@ ProxyPassReverse /google/ https://google.com/
 
 ### HttpProxy dynamic configuration and route generation helper:
 
-If you'd like to specify the configuration for a set of proxies, without
-having to maintain specific classes and url routes, you can use
+To specify the configuration for a set of proxies, without having to maintain
+specific classes and url routes, one can use
 `djproxy.helpers.generate_routes` as follows:
 
 In `urls.py`, pass `generate_routes` a `configuration` dict to configure a set
@@ -143,7 +159,7 @@ configuration = {
 urlpatterns += generate_routes(configuration)
 ```
 
-Using the snippet above will enable your Django app to proxy
+Using the snippet above will enable a Django app to proxy
 `https://google.com/X` at `/test_prefix/X` and
 `https://service.com/Y` at `/service_prefix/Y`.
 
@@ -169,11 +185,11 @@ ProxyPassReverse /service_prefix/ http://service.com/
 base_url and prefix are required.
 
 `middleware` and `append_middleware` are also optional. If neither are present,
-the default proxy middleware set will be used. If middleware is specified,
+the default proxy middleware set will be used. If `middleware` is specified,
 then the default proxy middleware list will be replaced. If
-append_middleware is specified, the list will be appended to the end of
-the middleware set. Use `append_middleware` if you want to add additional
-proxy behaviors without modifying the default behaviors.
+`append_middleware` is specified, the list will be appended to the end of
+the middleware set. Use `append_middleware` when adding additional proxy
+behaviors without modifying the default behaviors is desired.
 
 ## Proxy middleware
 
@@ -200,11 +216,11 @@ class ReverseProxy(HttpProxy):
     ]
 ```
 
-If you need to write your own middleware to modify content, headers, cookies,
-etc before the content is sent upstream of if you need to make similar
-modifications before the content is sent back downstream, you can write your own
-middleware and configure your view to use it. djproxy contains a [middleware
-template][2] to help you with this.
+If a custom middleware is needed to modify content, headers, cookies,
+etc before the content is sent upstream of if one needs to make similar
+modifications before the content is sent back downstream, a custom middleware
+can be written and proxy views can be configured to use it. djproxy contains a
+[middleware template][2] to make this process easier.
 
 ## Terminology
 
@@ -223,9 +239,9 @@ To run the tests, first install development dependencies:
 pip install -r requirements.txt
 ```
 
-If you'd like to test this against a version of Django other than the latest
-supported on your Python version, wipe out the `requirements.txt` installation
-by pip installing your desired version.
+To test this against a version of Django other than the latest supported on the
+test environment's Python version, wipe out the `requirements.txt` installation
+by pip installing the desired version.
 
 Run `nosetests` to execute the test suite.
 
@@ -252,3 +268,4 @@ information.
 [2]:https://github.com/thomasw/djproxy/blob/master/djproxy/proxy_middleware.py#L32
 [3]:https://github.com/yola/djproxy/blob/master/tests/test_views.py
 [4]:https://github.com/yola/djproxy/blob/master/tests/test_urls.py
+[5]:http://docs.python-requests.org/en/master/api/#requests.request
