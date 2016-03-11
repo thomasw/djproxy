@@ -32,6 +32,7 @@ setup(
     author_email='thomas.welfley+djproxy@gmail.com',
     description=__doc__,
     long_description=readme,
+    license='MIT',
     packages=find_packages(exclude=['tests', 'tests.*']),
     tests_require=tests_require,
     install_requires=install_requires,
