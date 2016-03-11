@@ -11,16 +11,20 @@ djproxy is a class-based generic view reverse HTTP proxy for Django.
 ## Why?
 
 If your application depends on a proxy (to get around Same Origin Policy issues
-in JavaScript, perhaps), djproxy can be used during development to provide that
-functionality.
+in JavaScript, perhaps), djproxy can be used to provide that functionality in
+a web server agnostic way. This allows developers to keep local development
+environments for proxy dependent applications fully functional without needing
+to run anything other than the django development server.
 
-djproxy is not intended to be used in production, but should suffice for
-development. Use your web server's proxy capabilities in the wild. If you need
-to use this in production for some reason, it should be sufficiently performant
-as long as the upstream responses aren't large. Performance can be further
-increased by aggressively caching upstream responses.
+djproxy is also suitable for use in production environments and has been proven
+to be performant in large scale deployments. However, your web server's proxy
+capabilities will be *more* performant in many cases. If you need to use this in
+production, it should be fine as long as upstream responses aren't large.
+Performance can be further increased by aggressively caching upstream responses.
 
-Note that djproxy doesn't currently support websockets.
+Note that djproxy doesn't currently support websockets because django doesn't
+support them. I will investigate adding websocket support as soon as django
+has it.
 
 ## Installation
 
@@ -52,6 +56,8 @@ urlpatterns = patterns(
 ```
 
 `/local_proxy/some/content` will now proxy `https://google.com/some/content/`.
+
+Additional examples can be found here: [views][3], [urls][4].
 
 
 ### HttpProxy configuration:
@@ -244,3 +250,5 @@ information.
 
 [1]:http://docs.python-requests.org/en/latest/user/advanced/?highlight=verify#ssl-cert-verification
 [2]:https://github.com/thomasw/djproxy/blob/master/djproxy/proxy_middleware.py#L32
+[3]:https://github.com/yola/djproxy/blob/master/tests/test_views.py
+[4]:https://github.com/yola/djproxy/blob/master/tests/test_urls.py
