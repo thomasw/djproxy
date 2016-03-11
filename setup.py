@@ -20,6 +20,9 @@ tests_require = [
 if sys.version_info[:2] < (2, 7):
     install_requires += ['django<1.7']
 
+with open('README.md', 'r') as f:
+    readme = f.read()
+
 setup(
     name="djproxy",
     version=__version__,
@@ -28,6 +31,7 @@ setup(
     author=__author__,
     author_email='thomas.welfley+djproxy@gmail.com',
     description=__doc__,
+    long_description=readme,
     packages=find_packages(exclude=['tests', 'tests.*']),
     tests_require=tests_require,
     install_requires=install_requires,
