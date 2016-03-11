@@ -1,15 +1,8 @@
+import multiprocessing  # noqa `python setup.py test` fix for python 2.6
 from setuptools import setup, find_packages
 import sys
 
 from djproxy import __author__, __doc__, __version__
-
-# Multiprocessing is needed to execute `python setup.py tests` without any
-# errors in some installations.
-try:
-    import multiprocessing
-    multiprocessing  # resolve unused import pep8 violation by 'using' it
-except ImportError:
-    pass
 
 install_requires = ['requests>=1.0.0', 'django>=1.4', 'six>=1.7.0']
 tests_require = [
