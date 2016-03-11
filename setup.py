@@ -14,12 +14,11 @@ except ImportError:
 install_requires = ['requests>=1.0.0', 'django>=1.4', 'six>=1.7.0']
 tests_require = [
     'mock==1.3.0', 'nose==1.3.7', 'unittest2==1.1.0', 'spec==1.3.1',
-    'requests>=1.0.0', 'django>=1.4']
+    'requests>=1.0.0']
 
 # Django >= 1.7 is not 2.6 compatible
 if sys.version_info[:2] < (2, 7):
     install_requires += ['django<1.7']
-    tests_require += ['django<1.7']
 
 setup(
     name="djproxy",
