@@ -181,15 +181,27 @@ ProxyPass /service_prefix/ http://service.com/
 ProxyPassReverse /service_prefix/ http://service.com/
 ```
 
-`verify_ssl`  and `csrf_exempt` are optional (and default to True), but
-base_url and prefix are required.
+Required configuration keys:
 
-`middleware` and `append_middleware` are also optional. If neither are present,
-the default proxy middleware set will be used. If `middleware` is specified,
-then the default proxy middleware list will be replaced. If
-`append_middleware` is specified, the list will be appended to the end of
-the middleware set. Use `append_middleware` when adding additional proxy
-behaviors without modifying the default behaviors is desired.
+* `base_url`
+* `prefix`
+
+Optional configuration keys:
+
+* `verify_ssl`: defaults to `True`.
+* `csrf_exempt`: defaults to `True`.
+* `cert`: defaults to `None`.
+* `timeout`: defaults to `None`.
+* `middleware`: Defaults to `None`. Specifying `None` causes djproxy to use
+  the default middleware set. If a list is passed, the default middleware
+  list specified by the HttpProxy definition will be replaced with the
+  provided list.
+* `append_middleware`: Defaults to `None`. `None` results in no changes to
+  the default middleware set. If a list is specified, the list will be
+  appended to the default middleware list specified in the HttpProxy
+  definition or, if provided, the middleware key specified in the config
+  dict.
+
 
 ## Proxy middleware
 
