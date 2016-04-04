@@ -276,9 +276,9 @@ on the test environment's Python version, wipe out the
 
 Run ``nosetests`` to execute the test suite.
 
-To automatically run the test suite, flake8, frosted, and pep257 checks
-whenever python files change use testtube by executing ``stir`` in the
-top level djproxy directory.
+To automatically run the test suite, flake8, and pep257 checks whenever python
+files change use testtube by executing ``stir`` in the top level djproxy
+directory.
 
 To run a Django dev server that proxies itself, execute the following:
 
