@@ -2,7 +2,7 @@ Changelog
 =========
 
 2.3.0
----
+-----
 
 -  Add a ``timeout`` configuration to HttpProxy views allowing
    configuration of how quickly HttpProxy views give up on slow upstream
