@@ -92,24 +92,24 @@ the following class attributes.
 -  ``reverse_urls``: An iterable of location header replacements to be
    made on the constructed response (similar to Apache's
    ``ProxyPassReverse`` directive).
--  ``verify_ssl``*: This attribute corresponds to `requests' verify
+-  ``verify_ssl``\*: This attribute corresponds to `requests' verify
    parameter <http://docs.python-requests.org/en/latest/user/advanced/?highlight=verify#ssl-cert-verification>`_.
    It may be either a boolean, which toggles SSL certificate
    verification on or off, or the path to a CA\_BUNDLE file for private
    certificates.
--  ``cert``*: This attribute corresponds to `requests' cert
+-  ``cert``\*: This attribute corresponds to `requests' cert
    parameter <http://docs.python-requests.org/en/latest/user/advanced/?highlight=verify#ssl-cert-verification>`_.
    If a string is specified, it will be treated as a path to an ssl
    client cert file (.pem). If a tuple is specified, it will be treated
    as a ('cert', 'key') pair.
--  ``timeout``*: This attribute corresponds to `requests' timeout
+-  ``timeout``\*: This attribute corresponds to `requests' timeout
    parameter <http://docs.python-requests.org/en/master/api/#requests.request>`_.
    It is used to specify how long to wait for the upstream server to
    send data before giving up. The value must be either a float
    representing the total timeout time in seconds, or a (connect timeout
    float, read timeout float) tuple.
 
-* The behavior changes that result from configuring ``verify_ssl``,
+\* The behavior changes that result from configuring ``verify_ssl``,
 ``cert``, and ``timeout`` will ultimately be dependent on the specific
 version of requests that's installed. For example, in older versions of
 requests, tuple values are not supported for the ``cert`` and
