@@ -50,20 +50,24 @@ class GenerateRoutesProxyViewGeneration(TestCase):
                 'prefix': '/yahoo/',
                 'verify_ssl': False,
                 'middleware': ['foo'],
-                'append_middleware': ['bar']
+                'append_middleware': ['bar'],
+                'cert': 'yay.pem',
+                'timeout': 5.0
             },
         })
 
     def test_are_configured_using_the_configuration_dict(self):
         self.generate_proxy_mock.assert_called_once_with(
             prefix='/yahoo/', base_url='https://yahoo.com/', verify_ssl=False,
-            middleware=['foo'], append_middleware=['bar'])
+            middleware=['foo'], append_middleware=['bar'], cert='yay.pem',
+            timeout=5.0)
 
 
 class GenerateProxy(TestCase):
     def setUp(self):
         self.proxy = generate_proxy(
-            '/google/', 'http://google.com/', False, ['foo'], ['bar'])
+            '/google/', 'http://google.com/', False, ['foo'], ['bar'],
+            'yay.pem', 5.0)
 
     def test_yields_an_HttpProxy_CBGV(self):
         self.assertTrue(issubclass(self.proxy, HttpProxy))
@@ -76,3 +80,9 @@ class GenerateProxy(TestCase):
 
     def test_sets_the_proxy_middleware_list_to_the_proper_middleware(self):
         self.assertEqual(self.proxy.proxy_middleware, ['foo', 'bar'])
+
+    def test_sets_timeout_to_the_specified_value(self):
+        self.assertEqual(self.proxy.timeout, 5.0)
+
+    def test_sets_cert_to_the_specified_value(self):
+        self.assertEqual(self.proxy.cert, 'yay.pem')

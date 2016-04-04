@@ -1,5 +1,15 @@
 # Changelog
 
+## Dev
+* Add a `timeout` configuration to HttpProxy views allowing configuration of
+  how quickly HttpProxy views give up on slow upstream responses.
+* Add a `cert` configuration option to HttpProxy views.
+* Update `generate_routes` and `generate_proxy` to support new configuration
+  options.
+* Documentation updates.
+* Correct a development environment issue with six: a version that was too low
+  was specified in requirements.txt which caused test failures in certain cases.
+
 ## 2.2.0
 * Adds python 3 support.
 

@@ -8,8 +8,8 @@ from djproxy.views import HttpProxy
 
 def generate_proxy(
         prefix, base_url='', verify_ssl=True, middleware=None,
-        append_middleware=None):
-    """Generates a ProxyClass based view that uses the passed base_url"""
+        append_middleware=None, cert=None, timeout=None):
+    """Generate a ProxyClass based view that uses the passed base_url."""
     middleware = list(middleware or HttpProxy.proxy_middleware)
     middleware += list(append_middleware or [])
 
@@ -17,12 +17,14 @@ def generate_proxy(
         'base_url': base_url,
         'reverse_urls': [(prefix, base_url)],
         'verify_ssl': verify_ssl,
-        'proxy_middleware': middleware
+        'proxy_middleware': middleware,
+        'cert': cert,
+        'timeout': timeout
     })
 
 
 def generate_routes(config):
-    """Generates a set of patterns and proxy views based on the passed config.
+    """Generate a set of patterns and proxy views based on the passed config.
 
     generate_routes({
         'test_proxy': {
@@ -31,21 +33,34 @@ def generate_routes(config):
             'verify_ssl': False,
             'csrf_exempt: False',
             'middleware': ['djproxy.proxy_middleware.AddXFF'],
-            'append_middleware': ['djproxy.proxy_middleware.AddXFF']
+            'append_middleware': ['djproxy.proxy_middleware.AddXFF'],
+            'timeout': 3.0,
+            'cert': None
         }
     })
 
-    `verify_ssl`  and `csrf_exempt` are optional (and default to True), but
-    base_url and prefix are required.
+    Required configuration keys:
 
-    middleware and append_middleware are also optional. If neither are present,
-    the default proxy middleware set will be used. If middleware is specified,
-    then the default proxy middleware list will be replaced. If
-    append_middleware is specified, the list will be appended to the end of
-    the middleware set. Use append_middleware if you want to add additional
-    proxy behaviors without modifying the default behaviors.
+    * `base_url`
+    * `prefix`
 
-    Returns
+    Optional configuration keys:
+
+    * `verify_ssl`: defaults to `True`.
+    * `csrf_exempt`: defaults to `True`.
+    * `cert`: defaults to `None`.
+    * `timeout`: defaults to `None`.
+    * `middleware`: Defaults to `None`. Specifying `None` causes djproxy to use
+      the default middleware set. If a list is passed, the default middleware
+      list specified by the HttpProxy definition will be replaced with the
+      provided list.
+    * `append_middleware`: Defaults to `None`. `None` results in no changes to
+      the default middleware set. If a list is specified, the list will be
+      appended to the default middleware list specified in the HttpProxy
+      definition or, if provided, the middleware key specificed in the config
+      dict.
+
+    Returns:
 
     patterns(
         '',
@@ -60,7 +75,9 @@ def generate_routes(config):
             prefix=config['prefix'], base_url=config['base_url'],
             verify_ssl=config.get('verify_ssl', True),
             middleware=config.get('middleware'),
-            append_middleware=config.get('append_middleware'))
+            append_middleware=config.get('append_middleware'),
+            cert=config.get('cert'),
+            timeout=config.get('timeout'))
         proxy_view_function = proxy.as_view()
 
         proxy_view_function.csrf_exempt = config.get('csrf_exempt', True)

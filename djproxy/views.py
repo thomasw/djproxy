@@ -11,7 +11,6 @@ from .request import DownstreamRequest
 
 
 class HttpProxy(View):
-
     """Reverse HTTP Proxy class-based generic view."""
 
     base_url = None
@@ -30,6 +29,8 @@ class HttpProxy(View):
     pass_query_string = True
     reverse_urls = []
     verify_ssl = True
+    cert = None
+    timeout = None
 
     def __init__(self, *args, **kwargs):
         return super(View, self).__init__(*args, **kwargs)
@@ -69,7 +70,8 @@ class HttpProxy(View):
         request_kwargs = self.middleware.process_request(
             self, self.request, method=self.request.method, url=self.proxy_url,
             headers=headers, data=self.request.body, params=qs,
-            allow_redirects=False, verify=self.verify_ssl)
+            allow_redirects=False, verify=self.verify_ssl, cert=self.cert,
+            timeout=self.timeout)
 
         result = request(**request_kwargs)
 

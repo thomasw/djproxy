@@ -3,7 +3,8 @@ from mock import ANY, Mock
 from unittest2 import TestCase
 
 from .helpers import RequestPatchMixin
-from .test_views import TestProxy, UnverifiedSSLProxy
+from .test_views import (
+    QuickTimeoutProxy, SpecifiedCertProxy, TestProxy, UnverifiedSSLProxy)
 
 
 class HttpProxyConfigVerification(TestCase, RequestPatchMixin):
@@ -56,7 +57,7 @@ class HttpProxyUrlConstructionWithoutURLKwarg(TestCase, RequestPatchMixin):
         """only contains base_url"""
         self.request.assert_called_once_with(
             method=ANY, url='https://google.com/', data=ANY, headers=ANY,
-            params=ANY, allow_redirects=ANY, verify=ANY)
+            params=ANY, allow_redirects=ANY, verify=ANY, cert=ANY, timeout=ANY)
 
 
 class HttpProxyUrlConstructionWithURLKwarg(TestCase, RequestPatchMixin):
@@ -74,7 +75,7 @@ class HttpProxyUrlConstructionWithURLKwarg(TestCase, RequestPatchMixin):
         """urljoins base_url and url kwarg"""
         self.request.assert_called_once_with(
             method=ANY, url='https://google.com/yay/', data=ANY, headers=ANY,
-            params=ANY, allow_redirects=ANY, verify=ANY)
+            params=ANY, allow_redirects=ANY, verify=ANY, cert=ANY, timeout=ANY)
 
 
 class HttpProxyUrlConstructionWithQueryStringPassingEnabled(
@@ -92,7 +93,7 @@ class HttpProxyUrlConstructionWithQueryStringPassingEnabled(
     def test_sends_query_string_to_proxied_endpoint(self):
         self.request.assert_called_once_with(
             method=ANY, url=ANY, data=ANY, headers=ANY, params='yay=foo,bar',
-            allow_redirects=ANY, verify=ANY)
+            allow_redirects=ANY, verify=ANY, cert=ANY, timeout=ANY)
 
 
 class HttpProxyUrlConstructionWithoutQueryStringPassingEnabled(
@@ -114,7 +115,7 @@ class HttpProxyUrlConstructionWithoutQueryStringPassingEnabled(
     def test_doesnt_sends_query_string_to_proxied_endpoint(self):
         self.request.assert_called_once_with(
             method=ANY, url=ANY, data=ANY, headers=ANY, params='',
-            allow_redirects=ANY, verify=ANY)
+            allow_redirects=ANY, verify=ANY, cert=ANY, timeout=ANY)
 
 
 class HttpProxyFetchingWithVerifySSL(TestCase, RequestPatchMixin):
@@ -131,7 +132,7 @@ class HttpProxyFetchingWithVerifySSL(TestCase, RequestPatchMixin):
     def test_tells_requests_to_verify_the_SSL_certs(self):
         self.request.assert_called_once_with(
             method=ANY, url=ANY, data=ANY, headers=ANY, params=ANY,
-            allow_redirects=ANY, verify=True)
+            allow_redirects=ANY, verify=True, cert=ANY, timeout=ANY)
 
 
 class HttpProxyFetchingWithoutVerifySSL(TestCase, RequestPatchMixin):
@@ -148,4 +149,40 @@ class HttpProxyFetchingWithoutVerifySSL(TestCase, RequestPatchMixin):
     def test_tells_requests_not_to_verify_the_ssl_certs(self):
         self.request.assert_called_once_with(
             method=ANY, url=ANY, data=ANY, headers=ANY, params=ANY,
-            allow_redirects=ANY, verify=False)
+            allow_redirects=ANY, verify=False, cert=ANY, timeout=ANY)
+
+
+class HttpProxyFetchingWithCert(TestCase, RequestPatchMixin):
+    """HttpProxy fetching with cert specified"""
+    def setUp(self):
+        self.fake_request = RequestFactory().get('/')
+        self.proxy = SpecifiedCertProxy.as_view()
+
+        self.request = self.patch_request(
+            Mock(raw='', status_code=200, headers={}))
+
+        self.proxy(self.fake_request, url='yay/')
+
+    def test_tells_requests_to_use_specific_cert(self):
+        self.request.assert_called_once_with(
+            method=ANY, url=ANY, data=ANY, headers=ANY, params=ANY,
+            allow_redirects=ANY, verify=ANY, cert=('cert.pem', 'key.pem'),
+            timeout=ANY)
+
+
+class HttpProxyFetchingWithTimeoutConfigured(TestCase, RequestPatchMixin):
+    """HttpProxy fetching with timeout specified"""
+    def setUp(self):
+        self.fake_request = RequestFactory().get('/')
+        self.proxy = QuickTimeoutProxy.as_view()
+
+        self.request = self.patch_request(
+            Mock(raw='', status_code=200, headers={}))
+
+        self.proxy(self.fake_request, url='yay/')
+
+    def test_tells_requests_to_use_specific_timeout(self):
+        self.request.assert_called_once_with(
+            method=ANY, url=ANY, data=ANY, headers=ANY, params=ANY,
+            allow_redirects=ANY, verify=ANY, cert=ANY,
+            timeout=(0.1, 0.1))

@@ -16,4 +16,4 @@ wheel
 django >=1.4,<1.7; python_version < '3.0'
 django; python_version > '3.0'
 requests>=1.0.0
-six>=1.7.0
+six>=1.9.0
