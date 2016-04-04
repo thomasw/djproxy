@@ -1,3 +1,4 @@
+from codecs import open
 import multiprocessing  # noqa `python setup.py test` fix for python 2.6
 from setuptools import setup, find_packages
 import sys
@@ -13,7 +14,7 @@ tests_require = [
 if sys.version_info[:2] < (2, 7):
     install_requires += ['django<1.7']
 
-with open('README.rst', 'r') as f:
+with open('README.rst', 'r', 'utf-8') as f:
     readme = f.read()
 
 setup(
