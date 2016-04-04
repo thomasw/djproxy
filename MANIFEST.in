@@ -1,4 +1,4 @@
-include *.md
 include LICENSE
 include requirements.txt
+include setup.cfg
 recursive-include tests *.py

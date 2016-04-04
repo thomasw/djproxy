@@ -13,7 +13,7 @@ tests_require = [
 if sys.version_info[:2] < (2, 7):
     install_requires += ['django<1.7']
 
-with open('README.md', 'r') as f:
+with open('README.rst', 'r') as f:
     readme = f.read()
 
 setup(
