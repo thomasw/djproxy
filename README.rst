@@ -3,6 +3,15 @@ djproxy
 
 |Build Status| |Coverage Status| |Latest Version| |Downloads|
 
+.. |Build Status| image:: https://img.shields.io/travis/thomasw/djproxy.svg
+   :target: https://travis-ci.org/thomasw/djproxy
+.. |Coverage Status| image:: https://img.shields.io/coveralls/thomasw/djproxy.svg
+   :target: https://coveralls.io/r/thomasw/djproxy
+.. |Latest Version| image:: https://img.shields.io/pypi/v/djproxy.svg
+   :target: https://pypi.python.org/pypi/djproxy/
+.. |Downloads| image:: https://img.shields.io/pypi/dm/djproxy.svg
+   :target: https://pypi.python.org/pypi/djproxy/
+
 djproxy is a class-based generic view reverse HTTP proxy for Django.
 
 Why?
@@ -61,8 +70,8 @@ be urljoined with base\_url:
 ``https://google.com/some/content/``.
 
 Additional examples can be found here:
-`views <https://github.com/yola/djproxy/blob/master/tests/test_views.py>`__,
-`urls <https://github.com/yola/djproxy/blob/master/tests/test_urls.py>`__.
+`views <https://github.com/yola/djproxy/blob/master/tests/test_views.py>`_,
+`urls <https://github.com/yola/djproxy/blob/master/tests/test_urls.py>`_.
 
 HttpProxy configuration:
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -83,24 +92,24 @@ the following class attributes.
 -  ``reverse_urls``: An iterable of location header replacements to be
    made on the constructed response (similar to Apache's
    ``ProxyPassReverse`` directive).
--  ``verify_ssl``\ \*: This attribute corresponds to `requests' verify
-   parameter <http://docs.python-requests.org/en/latest/user/advanced/?highlight=verify#ssl-cert-verification>`__.
+-  ``verify_ssl``*: This attribute corresponds to `requests' verify
+   parameter <http://docs.python-requests.org/en/latest/user/advanced/?highlight=verify#ssl-cert-verification>`_.
    It may be either a boolean, which toggles SSL certificate
    verification on or off, or the path to a CA\_BUNDLE file for private
    certificates.
--  ``cert``\ \*: This attribute corresponds to `requests' cert
-   parameter <http://docs.python-requests.org/en/latest/user/advanced/?highlight=verify#ssl-cert-verification>`__.
+-  ``cert``*: This attribute corresponds to `requests' cert
+   parameter <http://docs.python-requests.org/en/latest/user/advanced/?highlight=verify#ssl-cert-verification>`_.
    If a string is specified, it will be treated as a path to an ssl
    client cert file (.pem). If a tuple is specified, it will be treated
    as a ('cert', 'key') pair.
--  ``timeout``\ \*: This attribute corresponds to `requests' timeout
-   parameter <http://docs.python-requests.org/en/master/api/#requests.request>`__.
+-  ``timeout``*: This attribute corresponds to `requests' timeout
+   parameter <http://docs.python-requests.org/en/master/api/#requests.request>`_.
    It is used to specify how long to wait for the upstream server to
    send data before giving up. The value must be either a float
    representing the total timeout time in seconds, or a (connect timeout
    float, read timeout float) tuple.
 
-\* The behavior changes that result from configuring ``verify_ssl``,
+* The behavior changes that result from configuring ``verify_ssl``,
 ``cert``, and ``timeout`` will ultimately be dependent on the specific
 version of requests that's installed. For example, in older versions of
 requests, tuple values are not supported for the ``cert`` and
@@ -248,7 +257,7 @@ etc before the content is sent upstream of if one needs to make similar
 modifications before the content is sent back downstream, a custom
 middleware can be written and proxy views can be configured to use it.
 djproxy contains a `middleware
-template <https://github.com/thomasw/djproxy/blob/master/djproxy/proxy_middleware.py#L32>`__
+template <https://github.com/thomasw/djproxy/blob/master/djproxy/proxy_middleware.py#L32>`_
 to make this process easier.
 
 Terminology
@@ -294,12 +303,3 @@ Similarly, to run a configure Django shell, execute the following:
 
 See ``tests/test_settings.py`` and ``tests/test_urls.py`` for
 configuration information.
-
-.. |Build Status| image:: https://img.shields.io/travis/thomasw/djproxy.svg
-   :target: https://travis-ci.org/thomasw/djproxy
-.. |Coverage Status| image:: https://img.shields.io/coveralls/thomasw/djproxy.svg
-   :target: https://coveralls.io/r/thomasw/djproxy
-.. |Latest Version| image:: https://img.shields.io/pypi/v/djproxy.svg
-   :target: https://pypi.python.org/pypi/djproxy/
-.. |Downloads| image:: https://img.shields.io/pypi/dm/djproxy.svg
-   :target: https://pypi.python.org/pypi/djproxy/
