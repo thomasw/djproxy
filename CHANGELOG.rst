@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.3.1
+-----
+
+-  Readme updates so that pypi can render it.
+
 2.3.0
 -----
 
