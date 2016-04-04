@@ -8,7 +8,7 @@ ROOT_URLCONF = 'tests.test_urls'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'irrelevant.db'
+        'NAME': ':memory:',
     }
 }
 
