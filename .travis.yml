@@ -12,16 +12,16 @@ env:
     - DJANGO_VERSION=1.5.12
     - DJANGO_VERSION=1.6.11
     - DJANGO_VERSION=1.7.11
-    - DJANGO_VERSION=1.8.11
-    - DJANGO_VERSION=1.9.4
+    - DJANGO_VERSION=1.8.12
+    - DJANGO_VERSION=1.9.6
 matrix:
     exclude:
         - python: 2.6
           env: DJANGO_VERSION=1.7.11
         - python: 2.6
-          env: DJANGO_VERSION=1.8.11
+          env: DJANGO_VERSION=1.8.12
         - python: 2.6
-          env: DJANGO_VERSION=1.9.4
+          env: DJANGO_VERSION=1.9.6
         - python: 3.5
           env: DJANGO_VERSION=1.4.22
         - python: 3.5
