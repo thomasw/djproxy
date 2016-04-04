@@ -1,7 +1,7 @@
 Changelog
 =========
 
-Dev
+2.3.0
 ---
 
 -  Add a ``timeout`` configuration to HttpProxy views allowing
