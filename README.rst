@@ -59,10 +59,9 @@ be urljoined with base\_url:
 
 .. code:: python
 
-    urlpatterns = patterns(
-        '',
+    urlpatterns = [
         url(r'^local_proxy/(?P<url>.*)$', LocalProxy.as_view(), name='proxy')
-    )
+    ]
 
 ``/local_proxy/some/content`` will now proxy
 ``https://google.com/some/content/``.
@@ -136,9 +135,9 @@ Djproxy:
             ('/google/', 'https://google.com/')
         ]
 
-    urlpatterns = patterns(
-        '',
+    urlpatterns = patterns[
         url(r'^google/(?P<url>.*)$', ReverseProxy.as_view(), name='gproxy')
+    ]
 
 Apache:
 
