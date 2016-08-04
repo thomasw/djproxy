@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.3.2
+
+-  Add Django 1.10.x support
+
 2.3.1
 -----
 
