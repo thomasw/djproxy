@@ -42,6 +42,17 @@ Installation
 
 djproxy requires requests >= 1.0.0, django >= 1.4.0 and python >= 2.6.
 
+**Note about Django 1.10.x**: There is a
+`bug in Django 1.10.0 <https://code.djangoproject.com/ticket/27005>`_,
+which causes djproxy to raise an exception for some valid configurations. This
+issue is resolved in django master and 1.10.x branches. The fix will
+likely ship in 1.10.1. Users wishing to use djproxy in 1.10.0 in the interim can
+ensure that it will function correctly by temporarily disabling max upload
+memory utilization limits by setting ``DATA_UPLOAD_MAX_MEMORY_SIZE = None`` in
+settings.py. Alternatively, you can ensure that
+``request.META['CONTENT_LENGTH']`` is set to an integer value or ``None``
+before djproxy executes.
+
 Usage
 -----
 
