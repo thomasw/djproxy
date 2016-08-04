@@ -1,4 +1,5 @@
 """HTTP Reverse Proxy class based generic view."""
+from django import get_version as get_django_version
 from django.http import HttpResponse
 from django.views.generic import View
 from requests import request
@@ -66,6 +67,11 @@ class HttpProxy(View):
         """Retrieve the upstream content and build an HttpResponse."""
         headers = self.request.headers.filter(self.ignored_request_headers)
         qs = self.request.query_string if self.pass_query_string else ''
+
+        # Fix for django 1.10.0 bug https://code.djangoproject.com/ticket/27005
+        if (self.request.META.get('CONTENT_LENGTH', None) == '' and
+                get_django_version() == '1.10'):
+            del self.request.META['CONTENT_LENGTH']
 
         request_kwargs = self.middleware.process_request(
             self, self.request, method=self.request.method, url=self.proxy_url,

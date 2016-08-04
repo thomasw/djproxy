@@ -2,8 +2,12 @@ Changelog
 =========
 
 2.3.2
+-----
 
--  Add Django 1.10.x support
+-  Add Django 1.10.x support.
+-  Add workaround for https://code.djangoproject.com/ticket/27005 but
+   restrict it to Django 1.10 specifically. The issue should be fixed in
+   1.10.1.
 
 2.3.1
 -----
