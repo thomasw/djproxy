@@ -7,9 +7,12 @@ from .test_views import TestProxy
 
 
 class ResponseConstructionTest(TestCase, RequestPatchMixin):
+    def get_request(self):
+        return RequestFactory().get('/')
+
     def setUp(self):
         self.proxy = TestProxy.as_view()
-        self.browser_request = RequestFactory().get('/')
+        self.browser_request = self.get_request()
 
         self.proxy_stub = Mock(
             content='upstream content', headers={
@@ -36,3 +39,14 @@ class HttpProxyHeaderPassThrough(ResponseConstructionTest):
 
     def test_doesnt_set_ignored_upstream_headers_on_response_obj(self):
         self.assertFalse(self.response.has_header('Transfer-Encoding'))
+
+
+class HttpProxyEmptyContentLengthHandling(ResponseConstructionTest):
+    def get_request(self):
+        request = RequestFactory().get('/')
+        request.META['CONTENT_LENGTH'] = ''
+
+        return request
+
+    def test_succeeds(self):
+        self.assertEqual(self.response.status_code, 201)
