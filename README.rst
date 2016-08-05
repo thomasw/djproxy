@@ -42,6 +42,9 @@ Installation
 
 djproxy requires requests >= 1.0.0, django >= 1.4.0 and python >= 2.6.
 
+It's currently tested against Django 1.4.x, 1.5.x, 1.6.x, 1.7.x, 1.9.x, and
+1.10.x.
+
 Usage
 -----
 
@@ -59,10 +62,9 @@ be urljoined with base\_url:
 
 .. code:: python
 
-    urlpatterns = patterns(
-        '',
+    urlpatterns = [
         url(r'^local_proxy/(?P<url>.*)$', LocalProxy.as_view(), name='proxy')
-    )
+    ]
 
 ``/local_proxy/some/content`` will now proxy
 ``https://google.com/some/content/``.
@@ -136,9 +138,9 @@ Djproxy:
             ('/google/', 'https://google.com/')
         ]
 
-    urlpatterns = patterns(
-        '',
+    urlpatterns = patterns[
         url(r'^google/(?P<url>.*)$', ReverseProxy.as_view(), name='gproxy')
+    ]
 
 Apache:
 

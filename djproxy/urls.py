@@ -1,6 +1,6 @@
 import re
 
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from six import iteritems
 
 from djproxy.views import HttpProxy
@@ -24,7 +24,7 @@ def generate_proxy(
 
 
 def generate_routes(config):
-    """Generate a set of patterns and proxy views based on the passed config.
+    """Generate a list of urls that map to generated proxy views.
 
     generate_routes({
         'test_proxy': {
@@ -62,9 +62,9 @@ def generate_routes(config):
 
     Returns:
 
-    patterns(
-        '',
-        url(r'^test_prefix/', GeneratedProxy.as_view(), name='test_proxy'))
+    [
+        url(r'^test_prefix/', GeneratedProxy.as_view(), name='test_proxy')),
+    ]
 
     """
     routes = []
@@ -84,4 +84,4 @@ def generate_routes(config):
 
         routes.append(url(pattern, proxy_view_function, name=name))
 
-    return patterns('', *routes)
+    return routes
