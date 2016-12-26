@@ -1,6 +1,13 @@
 Changelog
 =========
 
+2.3.4
+-----
+
+- Make package description less than 200 characters. This seems to be breaking
+  the package metadata on pypi suddenly, even though it was fine before. This
+  release contains no functional changes.
+
 2.3.3
 -----
 - Fixes a bug that could interfere with subclassing HttpProxy based generic

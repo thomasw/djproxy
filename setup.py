@@ -23,7 +23,7 @@ setup(
     url='https://github.com/thomasw/djproxy',
     author=__author__,
     author_email='thomas.welfley+djproxy@gmail.com',
-    description=__doc__,
+    description=__doc__.strip().split('\n')[0],
     long_description=readme,
     license='MIT',
     packages=find_packages(exclude=['tests', 'tests.*']),
