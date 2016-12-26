@@ -2,48 +2,47 @@ sudo: false
 language: python
 cache: pip
 python:
-    - 2.6
     - 2.7
     - 3.4
     - 3.5
     - pypy
 env:
-    - DJANGO_VERSION=1.4.22
-    - DJANGO_VERSION=1.5.12
-    - DJANGO_VERSION=1.6.11
     - DJANGO_VERSION=1.7.11
     - DJANGO_VERSION=1.8.12
     - DJANGO_VERSION=1.9.8
     - DJANGO_VERSION=1.10.0
+    - DJANGO_VERSION=latest
 matrix:
+    include:
+        # The following versions don't work in python > 2.7
+        - python: 2.6
+          env: DJANGO_VERSION=1.4.22
+        - python: 2.6
+          env: DJANGO_VERSION=1.5.12
+        - python: 2.6
+          env: DJANGO_VERSION=1.6.11
+        - python: 2.7
+          env: DJANGO_VERSION=1.4.22
+        - python: 2.7
+          env: DJANGO_VERSION=1.5.12
+        - python: 2.7
+          env: DJANGO_VERSION=1.6.11
+        - python: pypy
+          env: DJANGO_VERSION=1.4.22
+        - python: pypy
+          env: DJANGO_VERSION=1.5.12
+        - python: pypy
+          env: DJANGO_VERSION=1.6.11
     exclude:
-        - python: 2.6
-          env: DJANGO_VERSION=1.7.11
-        - python: 2.6
-          env: DJANGO_VERSION=1.8.12
-        - python: 2.6
-          env: DJANGO_VERSION=1.9.8
-        - python: 2.6
-          env: DJANGO_VERSION=1.10.0
+        # Django 1.7 is a special case. It has python 3.4 support, but not 3.5
         - python: 3.5
-          env: DJANGO_VERSION=1.4.22
-        - python: 3.5
-          env: DJANGO_VERSION=1.5.12
-        - python: 3.5
-          env: DJANGO_VERSION=1.6.11
-        - python: 3.5
-          env: DJANGO_VERSION=1.7.11
-        - python: 3.4
-          env: DJANGO_VERSION=1.4.22
-        - python: 3.4
-          env: DJANGO_VERSION=1.5.12
-        - python: 3.4
-          env: DJANGO_VERSION=1.6.11
-        - python: 3.4
           env: DJANGO_VERSION=1.7.11
 install:
     - pip install -r requirements.txt
-    - pip install Django==$DJANGO_VERSION
+    - if [[ $DJANGO_VERSION != 'latest' ]]; then pip install django==$DJANGO_VERSION; fi
+    # Django 2.0 is supposed to drop support for everything but python>=3.5
+    # and this config file will need to be refactored whenever that is released
+    - if [[ $DJANGO_VERSION == 'latest' ]]; then pip install --upgrade 'django<2.0'; fi
 script:
     - python setup.py nosetests
 after_success:

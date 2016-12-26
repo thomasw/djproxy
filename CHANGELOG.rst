@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.3.3
+-----
+- Fixes a bug that could interfere with subclassing HttpProxy based generic
+  views.
+
 2.3.2
 -----
 

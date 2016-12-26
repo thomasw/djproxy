@@ -33,9 +33,6 @@ class HttpProxy(View):
     cert = None
     timeout = None
 
-    def __init__(self, *args, **kwargs):
-        return super(View, self).__init__(*args, **kwargs)
-
     @property
     def proxy_url(self):
         """Return URL to the resource to proxy."""
