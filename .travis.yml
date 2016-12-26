@@ -11,6 +11,7 @@ env:
     - DJANGO_VERSION=1.8.12
     - DJANGO_VERSION=1.9.8
     - DJANGO_VERSION=1.10.0
+    - DJANGO_VERSION=latest
 matrix:
     include:
         # The following versions don't work in python > 2.7
@@ -34,7 +35,10 @@ matrix:
           env: DJANGO_VERSION=1.6.11
 install:
     - pip install -r requirements.txt
-    - pip install Django==$DJANGO_VERSION
+    - if [[ $DJANGO_VERSION != 'latest' ]]; then pip install django==$DJANGO_VERSION; fi
+    # Django 2.0 is supposed to drop support for everything but python>=3.5
+    # and this config file will need to be refactored whenever that is released
+    - if [[ $DJANGO_VERSION == 'latest' ]]; then pip install --upgrade 'django<2.0'; fi
 script:
     - python setup.py nosetests
 after_success:
