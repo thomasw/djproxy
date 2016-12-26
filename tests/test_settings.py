@@ -1,6 +1,8 @@
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
+ALLOWED_HOSTS = ['testserver', 'localhost', '127.0.0.1', '::1']
+
 SECRET_KEY = 'fake_secret'
 
 ROOT_URLCONF = 'tests.test_urls'
