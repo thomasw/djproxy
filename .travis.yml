@@ -33,6 +33,10 @@ matrix:
           env: DJANGO_VERSION=1.5.12
         - python: pypy
           env: DJANGO_VERSION=1.6.11
+    exclude:
+        # Django 1.7 is a special case. It has python 3.4 support, but not 3.5
+        - python: 3.5
+          env: DJANGO_VERSION=1.7.11
 install:
     - pip install -r requirements.txt
     - if [[ $DJANGO_VERSION != 'latest' ]]; then pip install django==$DJANGO_VERSION; fi
