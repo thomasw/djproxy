@@ -108,6 +108,8 @@ the following class attributes.
    send data before giving up. The value must be either a float
    representing the total timeout time in seconds, or a (connect timeout
    float, read timeout float) tuple.
+-  ``request_class``: Python class in which will be decorated downstream request.
+   Default is ``djproxy.request.DownstreamRequest``
 
 \* The behavior changes that result from configuring ``verify_ssl``,
 ``cert``, and ``timeout`` will ultimately be dependent on the specific
