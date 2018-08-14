@@ -32,6 +32,7 @@ class HttpProxy(View):
     verify_ssl = True
     cert = None
     timeout = None
+    request_class = DownstreamRequest
 
     @property
     def proxy_url(self):
@@ -50,7 +51,7 @@ class HttpProxy(View):
 
     def dispatch(self, request, *args, **kwargs):
         """Dispatch all HTTP methods to the proxy."""
-        self.request = DownstreamRequest(request)
+        self.request = self.request_class(request)
         self.args = args
         self.kwargs = kwargs
 

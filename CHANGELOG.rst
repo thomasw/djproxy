@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.3.5
+-----
+- Add ``HttpProxy.request_class`` (default value: ``DownstreamRequest``)
+
 2.3.4
 -----
 

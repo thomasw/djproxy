@@ -15,4 +15,4 @@ Performance can be further increased by aggressively caching upstream
 responses.
 """
 __author__ = 'Thomas Welfley'
-__version__ = '2.3.4'
+__version__ = '2.3.5'
