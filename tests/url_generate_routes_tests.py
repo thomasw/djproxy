@@ -1,4 +1,4 @@
-from django.core.urlresolvers import get_resolver
+from django.urls import get_resolver
 from mock import patch
 from unittest2 import TestCase
 
