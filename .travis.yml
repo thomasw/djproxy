@@ -19,6 +19,16 @@ matrix:
           env: DJANGO_VERSION=1.11
         - python: pypy2.7
           env: DJANGO_VERSION=1.11
+    exclude:
+        # Django 2.0 is the last version to support Python <= 3.4.
+        - python: 3.4
+          env: DJANGO_VERSION=2.1
+        - python: 3.4
+          env: DJANGO_VERSION='latest'
+        - python: pypy3.4
+          env: DJANGO_VERSION=2.1
+        - python: pypy3.4
+          env: DJANGO_VERSION='latest'
 install:
     - pip install -r requirements.txt
     - if [[ $DJANGO_VERSION != 'latest' ]]; then pip install django==$DJANGO_VERSION; fi
