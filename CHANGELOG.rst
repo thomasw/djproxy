@@ -5,6 +5,7 @@ dev
 ---
 
 - Drop support for Python 2.6
+- Drop support for django < 1.11
 
 2.3.4
 -----

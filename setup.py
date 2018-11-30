@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 from djproxy import __author__, __doc__, __version__
 
-install_requires = ['requests>=1.0.0', 'django>=1.4', 'six>=1.9.0']
+install_requires = ['requests>=1.0.0', 'django>=1.11', 'six>=1.9.0']
 tests_require = [
     'mock==2.0.0', 'nose==1.3.7', 'unittest2==1.1.0', 'spec==1.4.1',
     'requests>=1.0.0']
@@ -35,6 +35,7 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: Implementation :: PyPy'
     ],
     test_suite='nose.collector'

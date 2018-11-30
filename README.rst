@@ -29,9 +29,7 @@ one needs to use this in production, it should be fine as long as
 upstream responses aren't large. Performance can be further increased by
 aggressively caching upstream responses.
 
-Note that djproxy doesn't currently support websockets because django
-doesn't support them. I will investigate adding websocket support as
-soon as django has it.
+Note that djproxy doesn't currently support websockets.
 
 Installation
 ------------
@@ -40,10 +38,14 @@ Installation
 
     pip install djproxy
 
-djproxy requires requests >= 1.0.0, django >= 1.4.0 and python >= 2.6.
+djproxy requires requests >= 1.0.0, django >= 1.11 and python >= 2.7. The goal
+is to maintain compatibility with all versions of `Django that are still
+officially supported
+<https://www.djangoproject.com/download/#supported-versions>`_. However, djproxy
+may still work with older versions.
 
-It's currently tested against Django 1.4.x, 1.5.x, 1.6.x, 1.7.x, 1.9.x, and
-1.10.x.
+If you encounter issues using djproxy with a supported version of django, please
+report it.
 
 Usage
 -----
