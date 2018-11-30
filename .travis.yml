@@ -17,7 +17,7 @@ matrix:
         # 1.11 is the last Django version to support python 2.7
         - python: 2.7
           env: DJANGO_VERSION=1.11
-        - python: pypy2.7
+        - python: pypy
           env: DJANGO_VERSION=1.11
     exclude:
         # Django 2.0 is the last version to support Python <= 3.4.
