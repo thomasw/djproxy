@@ -12,7 +12,6 @@ twine
 wheel
 
 # Functional requirements
-django >=1.4,<1.7; python_version < '2.7'
-django; python_version >= '2.7'
+django
 requests>=1.0.0
 six>=1.9.0

@@ -14,13 +14,6 @@ env:
     - DJANGO_VERSION=latest
 matrix:
     include:
-        # The following versions don't work in python > 2.7
-        - python: 2.6
-          env: DJANGO_VERSION=1.4.22
-        - python: 2.6
-          env: DJANGO_VERSION=1.5.12
-        - python: 2.6
-          env: DJANGO_VERSION=1.6.11
         - python: 2.7
           env: DJANGO_VERSION=1.4.22
         - python: 2.7
