@@ -4,6 +4,7 @@ cache: pip
 python:
     - 3.4
     - 3.5
+    - 3.6
     - pypy
 env:
     - DJANGO_VERSION = 1.11
