@@ -5,7 +5,7 @@ from djproxy import __author__, __doc__, __version__
 
 install_requires = ['requests>=1.0.0', 'django>=1.4', 'six>=1.9.0']
 tests_require = [
-    'mock==1.3.0', 'nose==1.3.7', 'unittest2==1.1.0', 'spec==1.3.1',
+    'mock==2.0.0', 'nose==1.3.7', 'unittest2==1.1.0', 'spec==1.4.1',
     'requests>=1.0.0']
 
 with open('README.rst', 'r', 'utf-8') as f:
