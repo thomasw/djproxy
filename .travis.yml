@@ -5,7 +5,7 @@ python:
     - 3.4
     - 3.5
     - 3.6
-    - 3.7
+    - 3.7-dev
     - pypy3.5
 env:
     - DJANGO_VERSION=1.11
