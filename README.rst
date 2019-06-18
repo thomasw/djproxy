@@ -1,7 +1,7 @@
 djproxy
 =======
 
-|Build Status| |Coverage Status| |Latest Version|
+|Build Status| |Coverage Status| |Latest Version| |PyPI - Python Version| |PyPI - Downloads|
 
 .. |Build Status| image:: https://img.shields.io/travis/thomasw/djproxy.svg
    :target: https://travis-ci.org/thomasw/djproxy
@@ -9,8 +9,10 @@ djproxy
    :target: https://coveralls.io/r/thomasw/djproxy
 .. |Latest Version| image:: https://img.shields.io/pypi/v/djproxy.svg
    :target: https://pypi.python.org/pypi/djproxy/
-
-djproxy is a class-based generic view reverse HTTP proxy for Django.
+.. |PyPI - Python Version| image:: https://img.shields.io/pypi/pyversions/djproxy.svg
+   :target: https://pypi.python.org/pypi/djproxy/
+.. |PyPI - Downloads| image:: https://img.shields.io/pypi/dm/djproxy.svg
+   :target: https://pypi.python.org/pypi/djproxy/
 
 Why?
 ----
