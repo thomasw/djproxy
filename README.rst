@@ -74,8 +74,8 @@ be urljoined with base\_url:
 ``https://google.com/some/content/``.
 
 Additional examples can be found here:
-`views <https://github.com/yola/djproxy/blob/master/tests/test_views.py>`_,
-`urls <https://github.com/yola/djproxy/blob/master/tests/test_urls.py>`_.
+`views <https://github.com/thomasw/djproxy/blob/master/tests/test_views.py>`_,
+`urls <https://github.com/thomasw/djproxy/blob/master/tests/test_urls.py>`_.
 
 HttpProxy configuration:
 ~~~~~~~~~~~~~~~~~~~~~~~~
