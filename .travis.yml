@@ -6,11 +6,13 @@ python:
     - 3.5
     - 3.6
     - 3.7
+    - 3.8
     - pypy3.5
 env:
     - DJANGO_VERSION=1.11
     - DJANGO_VERSION=2.1
     - DJANGO_VERSION=2.2
+    - DJANGO_VERSION=3.0
     - DJANGO_VERSION='latest'
 matrix:
     include:
@@ -19,6 +21,11 @@ matrix:
           env: DJANGO_VERSION=1.11
         - python: pypy
           env: DJANGO_VERSION=1.11
+    exclude:
+        - python: 3.5
+          env: DJANGO_VERSION=3.0
+        - python: pypy3.5
+          env: DJANGO_VERSION=3.0
 install:
     - pip install -r requirements.txt
     - if [[ $DJANGO_VERSION != 'latest' ]]; then pip install django==$DJANGO_VERSION; fi
