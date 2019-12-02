@@ -11,6 +11,7 @@ env:
     - DJANGO_VERSION=1.11
     - DJANGO_VERSION=2.1
     - DJANGO_VERSION=2.2
+    - DJANGO_VERSION=3.0
     - DJANGO_VERSION='latest'
 matrix:
     include:
