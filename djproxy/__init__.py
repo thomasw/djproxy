@@ -14,5 +14,5 @@ in production, it should be fine as long as upstream responses aren't large.
 Performance can be further increased by aggressively caching upstream
 responses.
 """
-__author__ = 'Thomas Welfley'
-__version__ = '2.3.4'
+__author__ = "Thomas Welfley"
+__version__ = "2.3.5"

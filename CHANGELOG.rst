@@ -1,9 +1,10 @@
 Changelog
 =========
 
-dev
----
+2.3.5
+-----
 
+- Declares Django 3.0 and Python 3.8 as supported versions
 - Drop support for Python 2.6
 - Drop support for django < 1.11
 
