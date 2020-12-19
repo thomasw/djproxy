@@ -8,8 +8,13 @@ class HeaderDict(dict):
     @staticmethod
     def _normalize_django_header_name(header):
         """Unmunge header names modified by Django."""
-        # Remove HTTP_ prefix.
-        new_header = header.rpartition('HTTP_')[2]
+        new_header = header
+        # HTTP header keys in Django's HttpRequest.META dict (except
+        # "CONTENT_TYPE" and "CONTENT_LENGTH") are prefixed with "HTTP_", so it
+        # needs to be removed if present.
+        prefix = 'HTTP_'
+        if new_header.startswith(prefix):
+            new_header = new_header[len(prefix):]
         # Camel case and replace _ with -
         new_header = '-'.join(
             x.capitalize() for x in new_header.split('_'))
