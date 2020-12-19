@@ -3,7 +3,6 @@ from six import iteritems
 
 
 class HeaderDict(dict):
-
     """A dict containing header, value pairings."""
 
     @staticmethod
