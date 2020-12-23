@@ -1,6 +1,13 @@
 Changelog
 =========
 
+2.3.6
+-----
+
+- Declares Django 3.1 as supported versions
+- Fixes a bug that changed the names of HTTP headers that contained http. For
+  example, X-Http-Method was incorrectly changed to Method.
+
 2.3.5
 -----
 

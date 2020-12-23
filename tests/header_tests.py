@@ -29,6 +29,7 @@ class HeaderDictFromRequestMethod(TestCase):
         self.request.META['HTTP_Fake_Header'] = 'header_value'
         self.request.META['HTTP_X_Forwarded_For'] = 'ipaddr 1'
         self.request.META['HTTP_UNNORMALIZED_HEADER'] = 'header value'
+        self.request.META['HTTP_X_HTTP_METHOD'] = 'MERGE'
         self.request.META['CONTENT_TYPE'] = 'header value'
 
         self.headers = HeaderDict.from_request(self.request)
@@ -38,6 +39,9 @@ class HeaderDictFromRequestMethod(TestCase):
 
     def test_contains_http_prefixed_headers(self):
         self.assertIn('Fake-Header', self.headers)
+
+    def test_contains_http_prefixed_header_containing_http(self):
+        self.assertIn('X-Http-Method', self.headers)
 
     def test_contains_normalized_header_names(self):
         self.assertIn('Unnormalized-Header', self.headers)
