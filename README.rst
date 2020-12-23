@@ -3,8 +3,8 @@ djproxy
 
 |Build Status| |Coverage Status| |Latest Version| |PyPI - Python Version| |PyPI - Downloads|
 
-.. |Build Status| image:: https://img.shields.io/travis/thomasw/djproxy.svg
-   :target: https://travis-ci.org/thomasw/djproxy
+.. |Build Status| image:: https://img.shields.io/travis/com/thomasw/djproxy.svg
+   :target: https://travis-ci.com/thomasw/djproxy
 .. |Coverage Status| image:: https://img.shields.io/coveralls/thomasw/djproxy.svg
    :target: https://coveralls.io/r/thomasw/djproxy
 .. |Latest Version| image:: https://img.shields.io/pypi/v/djproxy.svg
