@@ -1,6 +1,13 @@
 import re
 
-from django.conf.urls import url
+# The django url function is deprecated as of django 3.1
+# We use its equivalent re_path to maintain compatibility
+# with older versions of django
+try:
+    from django.urls import re_path
+except ImportError as exception:
+    from django.conf.urls import url as re_path
+
 from six import iteritems
 
 from djproxy.views import HttpProxy
@@ -82,6 +89,6 @@ def generate_routes(config):
 
         proxy_view_function.csrf_exempt = config.get('csrf_exempt', True)
 
-        routes.append(url(pattern, proxy_view_function, name=name))
+        routes.append(re_path(pattern, proxy_view_function, name=name))
 
     return routes
