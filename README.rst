@@ -236,7 +236,7 @@ Proxy middleware
 HttpProxys support custom middleware for preprocessing data from
 downstream to be sent to upstream endpoints and for preprocessing
 response data before it is sent back downstream. ``X-Forwarded-Host``,
-``X-Forwarded-For``, ``X-Forwarded-Proto`` and the ``ProxyPassRevere``
+``X-Forwarded-For``, ``X-Forwarded-Proto``, ``ForwardSetCookie`` and the ``ProxyPassRevere``
 functionality area all implemented as middleware.
 
 HttProxy views are configured to execute particular middleware by

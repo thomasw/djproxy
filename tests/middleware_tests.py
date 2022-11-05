@@ -3,8 +3,9 @@ from django.test.client import RequestFactory
 from mock import Mock
 from unittest2 import TestCase
 from six import iteritems
+from urllib3 import HTTPResponse
 
-from djproxy.proxy_middleware import AddXFF, AddXFH, AddXFP, ProxyPassReverse
+from djproxy.proxy_middleware import AddXFF, AddXFH, AddXFP, ProxyPassReverse, ForwardSetCookie
 from djproxy.request import DownstreamRequest
 
 
@@ -47,6 +48,75 @@ class AddXFPMiddlewareTest(TestCase):
         kwargs = self.get_kwargs(secure=False)
         self.assertEqual(
             kwargs['headers']['X-Forwarded-Proto'], 'http')
+
+
+class TestForwardSetCookie(TestCase):
+
+    def setUp(self):
+        self.request = DownstreamRequest(RequestFactory().get('/'))
+        self.upstream_response = {
+            'URI': 'http://upstream.tld/go/',
+            'Location': 'http://upstream.tld/go/',
+            'Content-Location': 'http://upstream.tld/go/',
+            'Location-Foo': 'http://upstream.tld/go/'
+        }
+        self.proxy = Mock()
+
+        self._tested = ForwardSetCookie()
+
+    def test_middleware_should_do_nothing_when_there_is_no_header_set_cookie(self):
+        # Assign
+        response = HttpResponse()
+
+        # Acts
+        response = self._tested.process_response(self.proxy, self.request, self.upstream_response, response)
+
+        # Assert
+        self.assertNotIn('set-cookie', response)
+
+    def test_middleware_should_move_cookie_into_cookies_and_remove_set_cookie_header(self):
+        # Assign
+        response = HttpResponse()
+        response['set-cookie'] = 'key=hello'
+        upstream_response = Mock()
+        upstream_response.raw = HTTPResponse()
+        upstream_response.raw.headers.add('set-cookie', 'key=hello')
+
+
+        # Acts
+        response = self._tested.process_response(self.proxy, self.request, upstream_response, response)
+
+        # Assert
+        cookie = response.cookies.get('key')
+        self.assertEqual('hello', cookie.value)
+        self.assertNotIn('set-cookie', response)
+
+    def test_middleware_should_move_multiple_cookies_into_cookies_and_remove_set_cookie_header(self):
+        # Assign
+        response = HttpResponse()
+        response['set-cookie'] = 'hello=world; Expires=Wed, 21 Oct 2015 07:28:00 GMT, world=hello'
+        upstream_response = Mock()
+        upstream_response.raw = HTTPResponse()
+        upstream_response.raw.headers.add('set-cookie', 'hello=world; Expires=Wed, 21 Oct 2015 07:28:00 GMT')
+        upstream_response.raw.headers.add('set-cookie', 'hello1=world; Domain=somecompany.co.uk')
+        upstream_response.raw.headers.add('set-cookie', 'hello2=world; Secure; Path=/')
+        upstream_response.raw.headers.add('set-cookie', 'world=hello')
+
+        # Acts
+        response = self._tested.process_response(self.proxy, self.request, upstream_response, response) # typing: HttpResponse
+
+        # Assert
+        cookie = response.cookies.get('hello')
+        self.assertEqual('world', cookie.value)
+
+        cookie = response.cookies.get('hello1')
+        self.assertEqual('somecompany.co.uk', cookie.get('domain'))
+
+        cookie = response.cookies.get('hello2')
+        self.assertEqual('/', cookie.get('path'))
+        self.assertEqual(True, cookie.get('secure'))
+
+        self.assertNotIn('set-cookie', response)
 
 
 class ProxyPassReverseTest(TestCase):

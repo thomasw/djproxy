@@ -1,5 +1,13 @@
 import re
 
+# The Cookie module has been renamed to http.cookies in Python 3.0.
+# We use its equivalent re_path to maintain compatibility
+# with older versions of django
+try:
+    from http.cookies import SimpleCookie
+except ImportError as exception:
+    from Cookie import SimpleCookie
+
 from .util import import_string
 
 
@@ -99,6 +107,55 @@ class AddXFP(object):
         kwargs['headers']['X-Forwarded-Proto'] = proto
 
         return kwargs
+
+
+class ForwardSetCookie(object):
+    """
+    Handles the transmission of multiple cookies returned by a server as multiple set-cookie headers.
+
+    Request merges the set-cookie headers into one. The default behavior is ok
+    if the server returns only one cookie per http response.
+
+    The browser will receive only one cookie.
+
+    {
+        Set-Cookie: hello=world; Expires=Wed, 21 Oct 2015 07:28:00 GMT, world=hello
+    }
+
+    instead
+
+    {
+        Set-Cookie: hello=world; Expires=Wed, 21 Oct 2015 07:28:00 GMT
+        Set-Cookie: world=hello
+    }
+
+    more about this behavior
+
+    * https://github.com/urllib3/urllib3/commit/d8013cb111644a06eb5cb9bccce174a1a996078d
+    * https://stackoverflow.com/a/57131320
+    * https://github.com/psf/requests/issues/3957#issuecomment-1047539652
+    """
+    def process_response(self, proxy, request, upstream_response, response):
+        if 'set-cookie' in response:
+            # The set-cookie headers are well present in the headers of urlib3 forwarded by request
+            # On its own interface, request has merged those cookies in one single header
+            for header, value in  upstream_response.raw.headers.items():
+                if header.lower() == 'set-cookie':
+                    cookies = SimpleCookie(value)
+                    for key in cookies.keys():
+                        cookie = cookies.get(key)
+                        response.set_cookie(cookie.key,
+                                            value=cookie.value,
+                                            expires=cookie.get('expires'),
+                                            path=cookie.get('path'),
+                                            domain=cookie.get('domain'),
+                                            secure=True if cookie.get('secure') else False,
+                                            httponly=True if cookie.get('httponly') else False)
+
+            # remove the default header added by request
+            del response['set-cookie']
+
+        return response
 
 
 class ProxyPassReverse(object):
