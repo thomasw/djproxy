@@ -76,7 +76,7 @@ class HttpProxy(View):
             allow_redirects=False, verify=self.verify_ssl, cert=self.cert,
             timeout=self.timeout)
 
-        result = request(**request_kwargs)
+        result = self._request(**request_kwargs)
 
         response = HttpResponse(result.content, status=result.status_code)
 
@@ -88,3 +88,6 @@ class HttpProxy(View):
 
         return self.middleware.process_response(
             self, self.request, result, response)
+
+    def _request(self, **kwargs):
+        return request(**kwargs)
